@@ -1,17 +1,23 @@
+// *** Configurable variables for the app ***
+// This file contains all the user-editable configuration values that can be updated when customizing the chatbot app.
 
 export const APP_CONFIG = {
+  // UPDATE: Set to the welcome message for the chatbot
   WELCOME_MESSAGE:
-    "TEOS: Egypt’s Sovereign Blockchain—Redefining Digital Public Infrastructure\nPioneering unbreakable innovation from Egypt, TEOS delivers a regulator-ready blockchain that connects with the Pi Network.",
-  NAME: "ASK-TEOS-AI",
-  DESCRIPTION: "ASK-TEOS-AI connects with the Pi Network to deliver civic-first, compliance-ready blockchain intelligence.",
+    "WELCOME TO TEOS WORLD!",
+
+  // UPDATE: Set to the name of the chatbot app
+  NAME: "ASK TEOS AI",
+
+  // UPDATE: Set to the description of the chatbot app
+  DESCRIPTION: "ASK-TEOS-AI is your gateway to Egypt's sovereign blockchain 👌",
 } as const;
 
 // Colors Configuration - UPDATE THESE VALUES BASED ON USER DESIGN PREFERENCES
 export const COLORS = {
-  BACKGROUND: "#0d1a26", // Deep blue for mythic civic tone
-  PRIMARY: "#d4af37",     // Gold for Egyptian prestige
-  TEXT: "#ffffff",        // White for clarity on dark background
-  ACCENT: "#8c7853",      // Papyrus-inspired accent
-  BUTTON_TEXT: "#0d1a26", // Dark text on gold buttons
-  LINK: "#d4af37",        // Gold links for consistency
+  // UPDATE: Set to the background color (hex format)
+  BACKGROUND: "#FFFFFF",
+
+  // UPDATE: Set to the primary color for buttons, links, etc. (hex format)
+  PRIMARY: "#4B73FF",
 } as const;

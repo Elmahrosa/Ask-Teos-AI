@@ -4,7 +4,7 @@
 // This file contains configuration values that should not be modified during normal app customization.
 // These values are set during app creation.
 
-export const APP_ID = "694df5c805886aa2bfc9b737";
+export const APP_ID = "69542ecd8d35a37806855a03";
 
 // Pi Network Configuration
 export const PI_NETWORK_CONFIG = {

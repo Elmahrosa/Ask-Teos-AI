@@ -2,14 +2,25 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Send, User, Bot, Settings } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Send, User, Bot, Crown } from "lucide-react"
 import { useChatbot } from "@/hooks/use-chatbot"
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom"
 import { APP_CONFIG, COLORS } from "@/lib/app-config"
+import Link from "next/link"
 
 export default function ChatBot() {
-  const { messages, input, isLoading, isAuthenticated, authMessage, sendMessage, handleKeyPress, handleInputChange } =
-    useChatbot()
+  const {
+    messages,
+    input,
+    isLoading,
+    isAuthenticated,
+    authMessage,
+    isFounderUser,
+    sendMessage,
+    handleKeyPress,
+    handleInputChange,
+  } = useChatbot()
 
   const { bottomRef } = useScrollToBottom([messages])
 
@@ -29,18 +40,27 @@ export default function ChatBot() {
   return (
     <div className="flex items-center justify-center min-h-screen p-4" style={{ backgroundColor: COLORS.BACKGROUND }}>
       <Card className="w-full max-w-md h-[600px] flex flex-col shadow-xl">
-        <CardHeader className="text-white rounded-t-lg relative" style={{ backgroundColor: COLORS.PRIMARY }}>
-          <Button
-            onClick={() => (window.location.href = "/dashboard")}
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2 text-white hover:bg-white/20"
-          >
-            <Settings size={20} />
-          </Button>
+        <CardHeader className="text-white rounded-t-lg" style={{ backgroundColor: COLORS.PRIMARY }}>
           <CardTitle className="text-center">
-            <div className="text-xl font-semibold">{APP_CONFIG.NAME}</div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="text-xl font-semibold">{APP_CONFIG.NAME}</div>
+              {isFounderUser && (
+                <Badge variant="secondary" className="bg-yellow-500 text-white border-yellow-600">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Founder
+                </Badge>
+              )}
+            </div>
             {APP_CONFIG.DESCRIPTION && <div className="text-sm opacity-90 mt-1">{APP_CONFIG.DESCRIPTION}</div>}
+            {isFounderUser && (
+              <div className="mt-2">
+                <Link href="/founder">
+                  <Button variant="secondary" size="sm" className="text-xs bg-white/20 hover:bg-white/30">
+                    Access Dashboard
+                  </Button>
+                </Link>
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
 
@@ -76,6 +96,13 @@ export default function ChatBot() {
         </CardContent>
 
         <CardFooter className="p-4 border-t">
+          {isFounderUser && (
+            <div className="w-full mb-2">
+              <Badge variant="outline" className="w-full justify-center text-xs py-1">
+                Unlimited Messages Available
+              </Badge>
+            </div>
+          )}
           <div className="flex w-full gap-2">
             <Input
               value={input}
