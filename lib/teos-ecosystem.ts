@@ -15,6 +15,57 @@ export const TEOS_VISION = {
   goal: "Creating a sovereign blockchain ecosystem for Egyptian digital transformation",
 } as const
 
+export const TEOS_GLOBAL_RECOGNITION = {
+  ranking: "Top 5 Best Sovereign Civic Blockchain Projects in 2026",
+  position: 3,
+  competitors: [
+    {
+      rank: 1,
+      name: "European EBSI / EUDI Wallet",
+      description: "Benchmark for government-backed digital identity with EU-wide adoption and strong legal harmonization",
+      region: "European Union",
+    },
+    {
+      rank: 2,
+      name: "Sovrin Network",
+      description: "Long-standing pioneer of self-sovereign identity with privacy-first architecture and principled governance",
+      region: "Global",
+    },
+    {
+      rank: 3,
+      name: "TEOS Egypt / Elmahrosa",
+      description: "Sovereign-first civic blockchain born in Egypt, aligned with constitutional governance, sustainable development goals, and real institutional enforcement",
+      region: "Egypt",
+      flag: "🇪🇬💙",
+      distinguishingFactors: [
+        "Constitution-rooted blockchain ecosystem",
+        "First sovereign blockchain in MENA region",
+        "Aligned with Egyptian Vision 2030",
+        "Real institutional enforcement capabilities",
+        "Independent development ahead of regional initiatives",
+      ],
+    },
+    {
+      rank: 4,
+      name: "ADI Chain (Abu Dhabi)",
+      description: "High-performance institutional blockchain with strong state backing and enterprise focus",
+      region: "UAE",
+    },
+  ],
+  achievements: [
+    "Recognized globally as a leading sovereign civic blockchain",
+    "Standing independently alongside EU and global pioneers",
+    "First constitutional-rooted blockchain in MENA",
+    "Featured at Consensus Hong Kong 2026",
+    "Pioneering Digital Public Infrastructure (DPI) for national resilience",
+  ],
+  consensus2026: {
+    event: "Consensus Hong Kong 2026",
+    theme: "The future of blockchain meets real-world sovereignty",
+    presentation: "TEOS — The Sovereign Stack: Digital Public Infrastructure for National Resilience",
+  },
+} as const
+
 export const TEOS_TECH_STACK = {
   frontend: "React + TypeScript",
   backend: "Express.js",
@@ -133,9 +184,60 @@ export const TEOS_INTEGRATIONS = {
   },
 } as const
 
+export const TEOS_CONSTITUTION = {
+  name: "International Civic Blockchain Constitution",
+  repo: "github.com/Elmahrosa/International-Civic-Blockchain-Constitution",
+  motto: "Sign With It",
+  description: "Global civic-first blockchain constitution anchored by Elmahrosa as coordinating authority",
+  principles: [
+    "Petition-first onboarding",
+    "Badge enforcement (Citizen, Validator, Founder tiers)",
+    "Transparent vault registry",
+    "Legal safety templates for each nation",
+    "Ritual logging of every update",
+  ],
+  structure: {
+    charter: "Founding document",
+    invitationManifesto: "Global call for nations",
+    chapterResurrection: "Ritual log of onboarding and updates",
+    vaultRegistry: "Treasury registry with dual verification",
+    governance: "Roles, petitions, badges, treasury rules",
+    compliance: "Templates and country profiles",
+    onboarding: "Flows and scripts for petition-first activation",
+    audits: "Transparency and certification logs",
+  },
+  linkedEcosystem: [
+    "Teos-Civic-Mixer: Petition-first civic flows",
+    "FPBE-First-Pimisr-Bank-Elmahrosa: Civic-first banking backbone",
+    "Digital-Reconstruction-of-Gaza: Humanitarian reconstruction",
+    "ERT-LAUNCH: Founder token injection",
+    "ElMahrosa-Pi-Smart-City: Pi SDK urban governance",
+    "Teos-Gold-Reserve: Gold-backed stability",
+    "TEOS-AI-Auditor: Transparency enforcement",
+    "TEOS-NFT-AI-Generator: NFT minting, royalties, staking",
+    "salma-unity-care-hospital: Social impact and healthcare",
+  ],
+  roadmap: {
+    phase1: "Civic Mixer - Petition-first flows and badge-gated onboarding",
+    phase2: "FPBE Bank Backbone - Route all flows through FPBE",
+    phase3: "Gaza Reconstruction - Humanitarian pipelines",
+    phase4: "ERT Launch - Founder injection and TEOS+ERT activation",
+    phase5: "Pi Smart City - Governance via Pi SDK",
+    phase6: "AI Auditor - Automated transparency enforcement",
+    phase7: "NFT Generator - Minting, royalties, and staking",
+    phase8: "Salma Hospital - Healthcare impact rails",
+    phase9: "Teos-Gold-Reserve - Convert liquidity to real gold (final step)",
+  },
+  licensing: {
+    community: "MIT - Free for civic contributors, students, humanitarian partners",
+    enterprise: "Required for governments, NGOs, institutions needing compliance and custody guarantees",
+  },
+} as const
+
 export const TEOS_ALL_REPOS = {
   total: 43,
   mainRepo: "github.com/Elmahrosa/Ask-Teos-AI",
+  constitutionRepo: "github.com/Elmahrosa/International-Civic-Blockchain-Constitution",
   categories: {
     core: ["El-Mahrosa.Teos-Sovereign-System", "TEOS-Core-Protocol", "TEOS-Consensus", "TEOS-Network-Node"],
     wallet: ["TeosWallet", "TeosWallet-Mobile", "TeosWallet-Extension"],
@@ -143,41 +245,52 @@ export const TEOS_ALL_REPOS = {
     governance: ["Teos-Governance", "TEOS-DAO", "TEOS-Voting", "TEOS-Proposals"],
     bridge: ["Pi-TEOS-Bridge", "TEOS-Bridge-SDK", "Bridge-Validator"],
     identity: ["Digital-Passport", "TEOS-Identity", "KYC-Verifier"],
-    banking: ["Bankchain", "TEOS-Bank-API", "Payment-Gateway"],
+    banking: ["Bankchain", "TEOS-Bank-API", "Payment-Gateway", "FPBE-First-Pimisr-Bank-Elmahrosa"],
     transportation: ["PiTaxi", "PiTaxi-Driver", "PiTaxi-Rider"],
     infrastructure: ["PiNode-Tools", "TEOS-Explorer", "TEOS-Analytics", "Network-Monitor"],
     mining: ["Teos-Mining-Bot", "Mining-Pool", "Hashrate-Optimizer"],
     staking: ["Teos-Staking", "Staking-Rewards", "Validator-Manager"],
     developer: ["TEOS-SDK", "TEOS-API", "Developer-Docs", "Smart-Contract-Templates"],
+    civic: ["Teos-Civic-Mixer", "International-Civic-Blockchain-Constitution"],
+    humanitarian: ["Digital-Reconstruction-of-Gaza", "salma-unity-care-hospital"],
+    assets: ["Teos-Gold-Reserve", "ERT-LAUNCH"],
+    ai: ["TEOS-AI-Auditor", "TEOS-NFT-AI-Generator"],
+    smartCity: ["ElMahrosa-Pi-Smart-City"],
   },
 } as const
 
 export const TEOS_QUICK_INFO = `
 ASK-TEOS-AI | TEOS Egypt Gateway
 
-1. Founder: Ayman Seif
-2. Stack: React + TypeScript + Express
-3. AI: TEOS knowledge + 43 repos
-4. Deep Search: Tavily (TAVILY_API_KEY)
-5. Founder Access: JWT (FOUNDER_JWT_SECRET) crown + unlimited chat
-6. Metrics API: /founder/metrics → stars, forks, issues, contributors (GITHUB_TOKEN)
-7. Analytics: PostHog (POSTHOG_KEY)
-8. CI/CD: GitHub Action tests on push/PR
-9. Deploy: Frontend→Vercel, Backend→Render free, Uptime→UptimeRobot
-10. Core TEOS Repos:
-    - El-Mahrosa.Teos-Sovereign-System
-    - TeosWallet
-    - TeosPump Launchpad
-    - Teos Governance
-    - Pi↔TEOS Bridge
-    - Digital Passport
-    - Bankchain
-    - PiTaxi
-    - PiNode Tools
-    - Teos Mining Bot + Staking
+🏆 RANKED #3 GLOBALLY - Best Sovereign Civic Blockchain Projects 2026
 
-11. DApps Supported: Wallet, Launchpad, Governance, Bankchain, Passport, Taxi, Mining.
-12. Vision: Egypt digital sovereignty + UN SDG + Vision 2030.
+1. Founder: Ayman Seif (Founder & Architect) - Elmahrosa
+2. Recognition: Top 5 Global Sovereign Blockchain (Consensus Hong Kong 2026)
+3. Constitution: International Civic Blockchain Constitution - "Sign With It"
+4. Stack: React + TypeScript + Express
+5. AI: TEOS knowledge + 43+ repos
+6. Deep Search: Tavily (TAVILY_API_KEY)
+7. Founder Access: JWT (FOUNDER_JWT_SECRET) crown + unlimited chat
+8. Metrics API: /founder/metrics → stars, forks, issues, contributors (GITHUB_TOKEN)
+9. Analytics: PostHog (POSTHOG_KEY)
+10. CI/CD: GitHub Action tests on push/PR
+11. Deploy: Frontend→Vercel, Backend→Render free, Uptime→UptimeRobot
+12. Linked Civic Ecosystem:
+    - International Civic Blockchain Constitution
+    - FPBE Bank (First Pimisr Bank Elmahrosa)
+    - Teos-Civic-Mixer
+    - Digital Reconstruction of Gaza
+    - Teos-Gold-Reserve
+    - TEOS-AI-Auditor
+    - TEOS-NFT-AI-Generator
+    - ElMahrosa Pi Smart City
+    - Salma Unity Care Hospital
+
+13. Core TEOS Repos: Sovereign System, Wallet, Launchpad, Governance, Pi Bridge, Digital Passport, Bankchain, PiTaxi, Mining, Staking.
+14. DApps Supported: Wallet, Launchpad, Governance, Bankchain, Passport, Taxi, Mining, NFT Generator.
+15. Vision: Egypt digital sovereignty + UN SDG + Vision 2030 + Civic-First Constitution.
+16. Global Standing: #3 worldwide, ahead of regional initiatives, alongside EU EBSI and Sovrin Network.
+17. Motto: "Sign With It" - Petition-first onboarding, badge enforcement, transparent vault registry.
 `
 
 // Helper function to search TEOS ecosystem
@@ -225,4 +338,26 @@ export function getAllDApps() {
 // Get founder info
 export function getFounderInfo() {
   return TEOS_FOUNDER
+}
+
+// Get global recognition and ranking
+export function getGlobalRecognition() {
+  return TEOS_GLOBAL_RECOGNITION
+}
+
+// Get TEOS competitive position
+export function getCompetitivePosition() {
+  const { rank, name, description, distinguishingFactors } = TEOS_GLOBAL_RECOGNITION.competitors.find(c => c.rank === 3)!
+  return {
+    rank,
+    name,
+    description,
+    distinguishingFactors,
+    competitors: TEOS_GLOBAL_RECOGNITION.competitors.filter(c => c.rank !== 3),
+  }
+}
+
+// Get constitution information
+export function getConstitutionInfo() {
+  return TEOS_CONSTITUTION
 }

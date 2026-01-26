@@ -8,6 +8,7 @@ import { usePiNetworkAuthentication } from "./use-pi-network-authentication"
 import { useFounderStatus } from "./use-founder-status"
 import { APP_CONFIG } from "@/lib/app-config"
 import { BACKEND_URLS } from "@/lib/system-config"
+import { generateOfflineResponse } from "@/lib/offline-ai"
 
 // Helper function to create messages
 const createMessage = (text: Message["text"], sender: Message["sender"], id?: Message["id"]): Message => ({
@@ -25,6 +26,7 @@ export const useChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([createMessage(APP_CONFIG.WELCOME_MESSAGE, "ai", "1")])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [offlineMode, setOfflineMode] = useState(false)
   const thinkingTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const showThinking = () => {
@@ -49,7 +51,9 @@ export const useChatbot = () => {
   }
 
   const sendMessage = async () => {
-    if (!piAccessToken || !input.trim()) return
+    if (!input.trim()) {
+      return
+    }
 
     const userMessage = createMessage(input.trim(), "user")
     setMessages((prev) => [...prev, userMessage])
@@ -58,49 +62,14 @@ export const useChatbot = () => {
 
     showThinking()
 
-    try {
-      const response = await fetch(BACKEND_URLS.CHAT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: piAccessToken,
-        },
-        body: JSON.stringify({ message: userMessage.text }),
-      })
-
+    // Use local TEOS AI - no backend required
+    setTimeout(() => {
       hideThinking()
-
-      if (response.status === 429) {
-        const errorData = await response.json()
-        const errorMessage = createMessage(
-          isFounderUser
-            ? "Backend rate limit reached. As founder, you should have unlimited access. Please check backend configuration."
-            : errorData.error_type === "daily_limit_exceeded"
-              ? errorData.error
-              : "Too many requests. Please try again later.",
-          "ai",
-        )
-        setMessages((prev) => [...prev, errorMessage])
-        return
-      }
-
-      const data = await response.json()
-
-      if (data.messages && Array.isArray(data.messages)) {
-        const aiMsg = data.messages.reverse().find((m: any) => m.sender === "ai")
-        const botMessage = createMessage(aiMsg ? aiMsg.text : "No AI response received.", "ai")
-        setMessages((prev) => [...prev, botMessage])
-      } else {
-        const errorMessage = createMessage("No response from backend.", "ai")
-        setMessages((prev) => [...prev, errorMessage])
-      }
-    } catch (error) {
-      hideThinking()
-      const errorMessage = createMessage("Error contacting backend.", "ai")
-      setMessages((prev) => [...prev, errorMessage])
-    } finally {
+      const aiResponse = generateOfflineResponse(userMessage.text)
+      const botMessage = createMessage(aiResponse, "ai")
+      setMessages((prev) => [...prev, botMessage])
       setIsLoading(false)
-    }
+    }, 800)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -131,6 +100,7 @@ export const useChatbot = () => {
     isAuthenticated,
     authMessage,
     isFounderUser,
+    offlineMode,
 
     // Actions
     sendMessage,
