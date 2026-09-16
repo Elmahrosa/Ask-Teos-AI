@@ -1,0 +1,10 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/founder/metrics/route": "app/api/founder/metrics/route.js",
+  "/api/teos/info/route": "app/api/teos/info/route.js",
+  "/api/teos/search/route": "app/api/teos/search/route.js",
+  "/founder/page": "app/founder/page.js",
+  "/page": "app/page.js",
+  "/teos/page": "app/teos/page.js"
+}

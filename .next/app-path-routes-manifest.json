@@ -1,0 +1,10 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/founder/metrics/route": "/api/founder/metrics",
+  "/api/teos/info/route": "/api/teos/info",
+  "/api/teos/search/route": "/api/teos/search",
+  "/founder/page": "/founder",
+  "/page": "/",
+  "/teos/page": "/teos"
+}

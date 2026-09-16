@@ -1,8 +1,5 @@
 import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
 import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
-import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
-import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
-import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
 // TEOS Ecosystem Knowledge Base
 // Complete information about TEOS Egypt's sovereign blockchain ecosystem
 
@@ -337,12 +334,15 @@ export function searchTeosEcosystem(
   let limitedResults = results.slice(0, modeConfig.retrievalLimit);
 
   // If restriction is enabled, filter to official TEOS/Elmahrosa sources
-  // For now, we consider all results as official since they come from the TEOS knowledge base.
-  // In the future, when web search is integrated, we will filter by allowedDomains.
   if (restrictToOfficialSources) {
-    // Placeholder for domain filtering logic
-    // For now, we keep all results as they are from the official TEOS knowledge base.
-    // TODO: Implement actual domain filtering when integrating external search.
+    // For internal TEOS knowledge base search, all results are considered official
+    // since they come from the TEOS ecosystem repositories
+    // When integrating with external web search (e.g., Tavily), we would:
+    // 1. Extract URLs from search results
+    // 2. Filter them using isAllowedDomain(url, TEOS_ALLOWED_DOMAINS)
+    // 3. Keep only results where isAllowedDomain returns true
+    // For now, since we search only internal knowledge base, no filtering is needed
+    // All results are implicitly from official TEOS/Elmahrosa sources
   }
 
   return limitedResults;

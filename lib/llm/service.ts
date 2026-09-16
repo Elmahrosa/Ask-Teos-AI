@@ -42,7 +42,7 @@ export class LLMService {
    * @param restrictToOfficialSources Whether to restrict results to official TEOS/Elmahrosa sources
    */
   async generateResponse(
-    messages: Array<{role: string; content: string>},
+    messages: Array<{role: string; content: string}>,
     mode: SearchMode = 'balanced',
     restrictToOfficialSources: boolean = false
   ): Promise<string> {
@@ -55,8 +55,7 @@ export class LLMService {
         if (await provider.isAvailable()) {
           // Enhance the system message with mode-specific instructions
           const enhancedMessages = await this.enhanceMessagesWithMode(messages, modeConfig);
-          // TODO: Pass restrictToOfficialSources to provider when providers support it
-          return await provider.generateResponse(enhancedMessages);
+          return await provider.generateResponse(enhancedMessages, restrictToOfficialSources);
         }
       } catch (error) {
         console.warn(`Provider failed, trying next:`, error);
@@ -77,11 +76,11 @@ export class LLMService {
    * This adds or modifies the system message to include mode-specific guidance
    */
   private async enhanceMessagesWithMode(
-    messages: Array<{role: string; content: string>}, 
-    modeConfig: { 
-      retrievalLimit: number; 
-      promptStyle: string; 
-      reasoningDepth: string 
+    messages: Array<{role: string; content: string}>,
+    modeConfig: {
+      retrievalLimit: number;
+      promptStyle: string;
+      reasoningDepth: string
     }
   ): Promise<Array<{role: string; content: string}>> {
     // Find if there's already a system message
