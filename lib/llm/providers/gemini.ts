@@ -13,7 +13,7 @@ export class GeminiProvider implements LLMProvider {
     return !!this.apiKey;
   }
 
-  async generateResponse(messages: LLMMessage[]): Promise<string> {
+  async generateResponse(messages: LLMMessage[], restrictToOfficialSources?: boolean): Promise<string> {
     if (!this.apiKey) {
       throw new Error('Gemini API key not configured');
     }

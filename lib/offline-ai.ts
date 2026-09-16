@@ -16,7 +16,7 @@ import {
   getConstitutionInfo,
 } from "./teos-ecosystem"
 
-export function generateOfflineResponse(userMessage: string): string {
+export function generateOfflineResponse(userMessage: string, restrictToOfficialSources: boolean = false): string {
   const message = userMessage.toLowerCase().trim()
 
   // Greetings
@@ -118,7 +118,7 @@ export function generateOfflineResponse(userMessage: string): string {
 
   // Repository search
   if (message.includes("repo") || message.includes("repository") || message.includes("github")) {
-    const searchResults = searchTeosEcosystem(message, "balanced")
+    const searchResults = searchTeosEcosystem(message, "balanced", [], restrictToOfficialSources)
     if (searchResults.length > 0) {
       return `Found ${searchResults.length} matching repositories:\n\n${searchResults.slice(0, 5).join("\n")}\n\nVisit github.com/Elmahrosa for the complete list of 43+ TEOS repositories.`
     }
@@ -155,7 +155,7 @@ export function generateOfflineResponse(userMessage: string): string {
   }
 
   // Search attempt
-  const searchResults = searchTeosEcosystem(message, "balanced")
+  const searchResults = searchTeosEcosystem(message, "balanced", [], restrictToOfficialSources)
   if (searchResults.length > 0) {
     return `I found information related to your query:\n\n${searchResults.slice(0, 3).join("\n")}\n\nWould you like to know more about any specific component?`
   }

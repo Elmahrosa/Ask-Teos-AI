@@ -4,16 +4,18 @@ import { searchTeosEcosystem } from "@/lib/teos-ecosystem"
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const query = searchParams.get("q")
+  const restrict = searchParams.get("restrict") === "true"
 
   if (!query) {
     return NextResponse.json({ error: "Query parameter 'q' is required" }, { status: 400 })
   }
 
-  const results = searchTeosEcosystem(query, "balanced")
+  const results = searchTeosEcosystem(query, "balanced", [], restrict)
 
   return NextResponse.json({
     query,
     results,
     count: results.length,
+    restrictToOfficialSources: restrict,
   })
 }

@@ -32,13 +32,13 @@ Recommended: Docker deployment under the Elmahrosa organization, with authentica
 - Pi Network authentication
 - Founder dashboard
 - CI/CD pipeline
-- Multi-provider LLM routing (Ollama, Groq, Gemini with fallback)
-- Search modes (fast/balanced/deep)
-- Domain-restricted search (official TEOS/Elmahrosa sources: elmahrosa.org, teosegypt.com, github.com/Elmahrosa)
 - Early-stage deep search (Tavily referenced — confirm actual wiring before claiming fully working)
 
 **Roadmap (planned — not yet shipped):**
+- Multi-provider LLM routing including local/offline (Ollama) support
+- Search modes (fast / balanced / deep)
+- Domain-restricted search
 - File upload + basic Q&A over documents
 - Local, auditable chat/search history under TEOS audit index
-- Integration points with TEOS AI Guard and TEOS AI Auditor integration points
+- Integration points with TEOS AI Guard and TEOS AI Auditor
 - Later: source-type filters, query suggestions

@@ -1,0 +1,74 @@
+import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
+import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
+
+// Helper function to determine if a result should be included based on domain restrictions
+function shouldIncludeResult(itemName: string, allowedDomains: string[]): boolean {
+  // If no domain restriction specified, include all results
+  if (!allowedDomains || allowedDomains.length === 0) {
+    return true
+  }
+  
+  // Check if the item is associated with any of the allowed domains
+  return isItemAssociatedWithDomains(itemName, allowedDomains)
+}
+
+// Helper function to determine if a category should be included based on domain restrictions
+function shouldIncludeCategory(categoryName: string, allowedDomains: string[]): boolean {
+  // If no domain restriction specified, include all results
+  if (!allowedDomains || allowedDomains.length === 0) {
+    return true
+  }
+  
+  // Check if the category is associated with any of the allowed domains
+  return isCategoryAssociatedWithDomains(categoryName, allowedDomains)
+}
+
+// Helper function to check if an item (repo name) is associated with allowed domains
+function isItemAssociatedWithDomains(itemName: string, allowedDomains: string[]): boolean {
+  // Check if item corresponds to known TEOS entities with explicit URLs
+  const teosEntityMap: Record<string, string> = {
+    'El-Mahrosa.Teos-Sovereign-System': 'github.com/Elmahrosa/Ask-Teos-AI',
+    'TeosWallet': 'github.com/Elmahrosa/TeosWallet',
+    'TeosPump Launchpad': 'github.com/Elmahrosa/TeosPump-Launchpad',
+    'Teos Governance': 'github.com/Elmahrosa/Teos-Governance',
+    'Pi-TEOS Bridge': 'github.com/Elmahrosa/Pi-TEOS-Bridge',
+    'Digital Passport': 'github.com/Elmahrosa/Digital-Passport',
+    'Bankchain': 'github.com/Elmahrosa/Bankchain',
+    'PiTaxi': 'github.com/Elmahrosa/PiTaxi',
+    'PiNode Tools': 'github.com/Elmahrosa/PiNode-Tools',
+    'Teos Mining Bot': 'github.com/Elmahrosa/Teos-Mining-Bot',
+    'Teos Staking': 'github.com/Elmahrosa/Teos-Staking'
+  }
+  
+  // If we know the explicit URL for this item, check it
+  if (teosEntityMap[itemName]) {
+    return isAllowedDomain(teosEntityMap[itemName], allowedDomains)
+  }
+  
+  // For items without explicit mapping, assume they are TEOS-related
+  // and check if any allowed domain is a TEOS domain
+  const hasTeosDomain = allowedDomains.some(domain => 
+    TEOS_ALLOWED_DOMAINS.includes(domain as TEOSAllowedDomain)
+  )
+  
+  // If the restriction includes TEOS domains, allow TEOS-related items
+  // If the restriction is for non-TEOS domains only, be more restrictive
+  return hasTeosDomain || allowedDomains.length === 0
+}
+
+// Helper function to check if a category is associated with allowed domains
+function isCategoryAssociatedWithDomains(categoryName: string, allowedDomains: string[]): boolean {
+  // If no domain restriction specified, include all results
+  if (!allowedDomains || allowedDomains.length === 0) {
+    return true
+  }
+  
+  // Check if any of the allowed domains are TEOS domains
+  const hasTeosDomain = allowedDomains.some(domain => 
+    TEOS_ALLOWED_DOMAINS.includes(domain as TEOSAllowedDomain)
+  )
+  
+  // If the restriction includes TEOS domains, allow TEOS categories
+  // If the restriction is for non-TEOS domains only, be more restrictive
+  return hasTeosDomain || allowedDomains.length === 0
+}

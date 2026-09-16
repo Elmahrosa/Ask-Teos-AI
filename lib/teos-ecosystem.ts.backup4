@@ -1,8 +1,6 @@
 import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
 import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
 import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
-import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
-import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
 // TEOS Ecosystem Knowledge Base
 // Complete information about TEOS Egypt's sovereign blockchain ecosystem
 
@@ -299,12 +297,7 @@ ASK-TEOS-AI | TEOS Egypt Gateway
 `
 
 // Helper function to search TEOS ecosystem
-export function searchTeosEcosystem(
-  query: string,
-  mode: SearchMode = "balanced",
-  allowedDomains: string[] = [],
-  restrictToOfficialSources: boolean = false
-): string[] {
+export function searchTeosEcosystem(query: string, mode: SearchMode = "balanced", allowedDomains: string[] = []): string[] {
   const lowerQuery = query.toLowerCase()
   const results: string[] = []
 
@@ -332,20 +325,8 @@ export function searchTeosEcosystem(
     }
   })
 
-  // Apply search mode limit
   const modeConfig = getSearchModeConfig(mode);
-  let limitedResults = results.slice(0, modeConfig.retrievalLimit);
-
-  // If restriction is enabled, filter to official TEOS/Elmahrosa sources
-  // For now, we consider all results as official since they come from the TEOS knowledge base.
-  // In the future, when web search is integrated, we will filter by allowedDomains.
-  if (restrictToOfficialSources) {
-    // Placeholder for domain filtering logic
-    // For now, we keep all results as they are from the official TEOS knowledge base.
-    // TODO: Implement actual domain filtering when integrating external search.
-  }
-
-  return limitedResults;
+  return results.slice(0, modeConfig.retrievalLimit);
 }
 
 // Get repository by category

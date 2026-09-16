@@ -1,5 +1,5 @@
 export interface LLMProvider {
-  generateResponse(messages: Array<{role: string; content: string>}): Promise<string>;
+  generateResponse(messages: Array<{role: string; content: string>}, restrictToOfficialSources?: boolean): Promise<string>;
   isAvailable(): Promise<boolean>;
 }
 

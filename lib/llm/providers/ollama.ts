@@ -19,7 +19,7 @@ export class OllamaProvider implements LLMProvider {
     }
   }
 
-  async generateResponse(messages: LLMMessage[]): Promise<string> {
+  async generateResponse(messages: LLMMessage[], restrictToOfficialSources?: boolean): Promise<string> {
     try {
       // Convert messages to Ollama format
       const ollamaMessages = messages.map(msg => ({

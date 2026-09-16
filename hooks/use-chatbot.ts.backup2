@@ -8,7 +8,6 @@ import { usePiNetworkAuthentication } from "./use-pi-network-authentication"
 import { useFounderStatus } from "./use-founder-status"
 import { APP_CONFIG } from "@/lib/app-config"
 import { llmService } from "@/lib/llm/service"
-import { SearchMode, getSearchModeConfig } from "@/lib/search/types"
 
 // Helper function to create messages
 const createMessage = (text: Message["text"], sender: Message["sender"], id?: Message["id"]): Message => ({
@@ -27,8 +26,6 @@ export const useChatbot = () => {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [offlineMode, setOfflineMode] = useState(false)
-  const [searchMode, setSearchMode] = useState<SearchMode>("balanced") // Default to balanced
-  const [restrictToOfficialSources, setRestrictToOfficialSources] = useState(false) // Default to OFF
   const thinkingTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const showThinking = () => {
@@ -78,7 +75,7 @@ export const useChatbot = () => {
       }
 
       const allMessages = [systemMessage, ...llmMessages]
-      const aiResponse = await llmService.generateResponse(allMessages, searchMode, restrictToOfficialSources)
+      const aiResponse = await llmService.generateResponse(allMessages)
       const botMessage = createMessage(aiResponse, "ai")
       setMessages((prev) => [...prev, botMessage])
     } catch (error) {
@@ -121,14 +118,10 @@ export const useChatbot = () => {
     authMessage,
     isFounderUser,
     offlineMode,
-    searchMode,
-    restrictToOfficialSources,
 
     // Actions
     sendMessage,
     handleKeyPress,
     handleInputChange,
-    setSearchMode,
-    setRestrictToOfficialSources,
   }
 }
