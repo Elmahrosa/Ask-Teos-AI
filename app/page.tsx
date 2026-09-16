@@ -264,6 +264,30 @@ export default function ChatBot() {
               </Badge>
             </div>
           )}
+          <div className="flex w-full mb-2 items-center gap-4">
+            <span className="text-xs font-medium">Search Mode:</span>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setSearchMode("fast")}
+                className={`px-2 py-1 rounded text-xs ${searchMode === "fast" ? "bg-primary text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+              >
+                Fast
+              </button>
+              <button
+                onClick={() => setSearchMode("balanced")}
+                className={`px-2 py-1 rounded text-xs ${searchMode === "balanced" ? "bg-primary text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+              >
+                Balanced
+              </button>
+              <button
+                onClick={() => setSearchMode("deep")}
+                className={`px-2 py-1 rounded text-xs ${searchMode === "deep" ? "bg-primary text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+              >
+                Deep
+              </button>
+              <span className="text-xs text-gray-500">({searchMode})</span>
+            </div>
+          </div>
           <div className="flex w-full gap-2">
             <Input
               value={input}
@@ -272,17 +296,16 @@ export default function ChatBot() {
               placeholder="Type your message..."
               disabled={isLoading}
               className="flex-1 border-2"
-              style={{
-                borderColor: "#e5e7eb",
-              }}
+              style={
+                {
+                  borderColor: "#e5e7eb",
+                }
+              }
             />
             <Button
               onClick={sendMessage}
               disabled={isLoading || !input.trim()}
-              className="p-2 hover:opacity-90"
-              style={{
-                backgroundColor: COLORS.PRIMARY,
-              }}
+              style={{ backgroundColor: COLORS.PRIMARY }}
               size="icon"
             >
               <Send size={16} />

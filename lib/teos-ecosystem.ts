@@ -1,3 +1,4 @@
+import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
 // TEOS Ecosystem Knowledge Base
 // Complete information about TEOS Egypt's sovereign blockchain ecosystem
 
@@ -294,7 +295,7 @@ ASK-TEOS-AI | TEOS Egypt Gateway
 `
 
 // Helper function to search TEOS ecosystem
-export function searchTeosEcosystem(query: string): string[] {
+export function searchTeosEcosystem(query: string, mode: SearchMode = "balanced"): string[] {
   const lowerQuery = query.toLowerCase()
   const results: string[] = []
 
@@ -322,7 +323,8 @@ export function searchTeosEcosystem(query: string): string[] {
     }
   })
 
-  return results
+  const modeConfig = getSearchModeConfig(mode);
+  return results.slice(0, modeConfig.retrievalLimit);
 }
 
 // Get repository by category

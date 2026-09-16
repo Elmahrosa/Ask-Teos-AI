@@ -7,8 +7,8 @@ import type { Message } from "@/lib/types"
 import { usePiNetworkAuthentication } from "./use-pi-network-authentication"
 import { useFounderStatus } from "./use-founder-status"
 import { APP_CONFIG } from "@/lib/app-config"
-import { BACKEND_URLS } from "@/lib/system-config"
-import { generateOfflineResponse } from "@/lib/offline-ai"
+import { llmService } from "@/lib/llm/service"
+import { SearchMode, getSearchModeConfig } from "@/lib/search/types"
 
 // Helper function to create messages
 const createMessage = (text: Message["text"], sender: Message["sender"], id?: Message["id"]): Message => ({
@@ -27,6 +27,7 @@ export const useChatbot = () => {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [offlineMode, setOfflineMode] = useState(false)
+  const [searchMode, setSearchMode] = useState<SearchMode>("balanced") // Default to balanced
   const thinkingTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const showThinking = () => {
@@ -62,14 +63,32 @@ export const useChatbot = () => {
 
     showThinking()
 
-    // Use local TEOS AI - no backend required
-    setTimeout(() => {
-      hideThinking()
-      const aiResponse = generateOfflineResponse(userMessage.text)
+    try {
+      // Convert messages to the format expected by LLM service
+      const llmMessages = messages.map(msg => ({
+        role: msg.sender === "user" ? "user" : "assistant",
+        content: msg.text
+      }))
+
+      // Add a system message to set the context
+      const systemMessage = {
+        role: "system",
+        content: "You are ASK TEOS AI, a helpful assistant for the TEOS ecosystem. Provide accurate, concise answers about TEOS, blockchain, and related topics."
+      }
+
+      const allMessages = [systemMessage, ...llmMessages]
+      const aiResponse = await llmService.generateResponse(allMessages, searchMode)
       const botMessage = createMessage(aiResponse, "ai")
       setMessages((prev) => [...prev, botMessage])
+    } catch (error) {
+      console.error('Error generating AI response:', error)
+      // Fallback to a simple error message
+      const botMessage = createMessage("I apologize, but I'm experiencing technical difficulties. Please try again later.", "ai")
+      setMessages((prev) => [...prev, botMessage])
+    } finally {
+      hideThinking()
       setIsLoading(false)
-    }, 800)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -101,10 +120,12 @@ export const useChatbot = () => {
     authMessage,
     isFounderUser,
     offlineMode,
+    searchMode,
 
     // Actions
     sendMessage,
     handleKeyPress,
     handleInputChange,
+    setSearchMode,
   }
 }
