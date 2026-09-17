@@ -33,7 +33,7 @@ actually in the repo today — not aspirational claims.
 | Private/self-hosted web search | Not present (Tavily referenced instead) | Only if full search privacy becomes a hard requirement | Keep Tavily (or similar managed API) for near-term work; treat self-hosted search as a separate infra project | Deferred |
 | Contextual widgets (weather, calc, metrics) | Not present | Low priority for this repo's purpose | Skip, or add only governance-relevant metrics later | Low |
 | File upload + Q&A | Not present | Yes — strong fit for audit/documentation use cases | Basic upload + simple retrieval/Q&A over uploaded files | Medium |
-| Domain-restricted search | Not present | Yes — useful for scoping to TEOS docs/governance papers | Query filter, if search backend supports it | High |
+| Domain-restricted search | Shipped (wired; internal TEOS knowledge base treated as official; external URL filtering not active without web search) | Yes — useful for scoping to TEOS docs/governance papers | Query filter, if search backend supports it | High |
 | Search-query suggestions | Not present | Nice-to-have | Simple prefix or LLM-based suggestion | Later |
 | Trending/"discover" content feed | Not present | Low relevance to this repo's purpose | Skip | Low |
 | Local, auditable search/chat history | Not confirmed | Yes — needed for an audit trail | Store chat history under a TEOS audit index | High |

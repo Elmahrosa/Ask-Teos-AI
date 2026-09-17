@@ -34,7 +34,7 @@ Recommended: Docker deployment under the Elmahrosa organization, with authentica
 - CI/CD pipeline
 - Multi-provider LLM routing (Ollama, Groq, Gemini with fallback)
 - Search modes (fast/balanced/deep)
-- Domain-restricted search (official TEOS/Elmahrosa sources: elmahrosa.org, teosegypt.com, github.com/Elmahrosa)
+- Domain-restricted search (wired; internal TEOS knowledge base considered official; external filtering pending Tavily integration)
 - Early-stage deep search (Tavily referenced — confirm actual wiring before claiming fully working)
 
 **Roadmap (planned — not yet shipped):**
