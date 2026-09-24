@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-export const useScrollToBottom = <T extends any[]>(dependencies: T) => {
+export const useScrollToBottom = <T extends unknown[]>(dependencies: T) => {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {

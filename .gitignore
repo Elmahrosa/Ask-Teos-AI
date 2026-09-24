@@ -1,3 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+.next/
+out/
+build/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Environment & secrets — never commit real keys
+.env
+.env.*
+!.env.example
+
+# Backup / temp
 *.backup*
 *.tmp
-node_modules/

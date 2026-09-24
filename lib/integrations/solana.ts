@@ -5,7 +5,7 @@
  * Configure TEOS_RPC environment variable with your RPC endpoint.
  */
 
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js"
+import { Connection, PublicKey, clusterApiUrl, type ConfirmedSignatureInfo } from "@solana/web3.js"
 
 /**
  * Get Solana connection to TEOS network
@@ -39,7 +39,7 @@ export async function getBalance(publicKey: string): Promise<number> {
 /**
  * Get recent transaction signatures for an account
  */
-export async function getRecentTransactions(publicKey: string, limit = 10): Promise<any[]> {
+export async function getRecentTransactions(publicKey: string, limit = 10): Promise<ConfirmedSignatureInfo[]> {
   try {
     const connection = getTeosConnection()
     const pubKey = new PublicKey(publicKey)

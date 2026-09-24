@@ -331,7 +331,7 @@ export function searchTeosEcosystem(
 
   // Apply search mode limit
   const modeConfig = getSearchModeConfig(mode);
-  let limitedResults = results.slice(0, modeConfig.retrievalLimit);
+  const limitedResults = results.slice(0, modeConfig.retrievalLimit);
 
   // If restriction is enabled, filter to official TEOS/Elmahrosa sources
   if (restrictToOfficialSources) {

@@ -16,13 +16,13 @@ export default function TeosInfoPage() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold">TEOS Ecosystem</h1>
-        <p className="text-muted-foreground">Egypt's Sovereign Blockchain Gateway</p>
+        <p className="text-muted-foreground">Egypt&apos;s Sovereign Blockchain Gateway</p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Founder</CardTitle>
-          <CardDescription>Leading Egypt's blockchain revolution</CardDescription>
+          <CardDescription>Leading Egypt&apos;s blockchain revolution</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div>

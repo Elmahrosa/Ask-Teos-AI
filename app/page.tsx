@@ -66,7 +66,7 @@ export default function ChatBot() {
             <div className="text-center space-y-4">
               <h2 className="text-2xl font-bold text-gray-900">Unlock the Future of Decentralized Interaction</h2>
               <p className="text-gray-700 leading-relaxed">
-                Seamlessly integrate Pi Network's blockchain with intelligent AI-driven chat, giving you a secure,
+                Seamlessly integrate Pi Network&apos;s blockchain with intelligent AI-driven chat, giving you a secure,
                 private, and lightning-fast experience. With Pi AI, founders and pioneers can explore real-time
                 insights, manage your Pi assets, and connect with the Pi community effortlessly.
               </p>
@@ -140,7 +140,7 @@ export default function ChatBot() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-gray-800 leading-relaxed">
                 Built for simplicity, every message, query, or transaction is protected on the Pi Network, combining the
-                power of blockchain with smart AI assistance. Whether you're tracking your Pi balance, exploring dApps,
+                power of blockchain with smart AI assistance. Whether you&apos;re tracking your Pi balance, exploring dApps,
                 or experimenting with AI integrations, Pi AI makes it intuitive and reliable.
               </p>
             </div>

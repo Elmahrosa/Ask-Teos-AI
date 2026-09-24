@@ -9,7 +9,7 @@ export const FOUNDER_CONFIG = {
  * Check if a user ID belongs to a founder
  */
 export function isFounder(userId: string): boolean {
-  return FOUNDER_CONFIG.FOUNDER_IDS.includes(userId as any)
+  return (FOUNDER_CONFIG.FOUNDER_IDS as readonly string[]).includes(userId)
 }
 
 /**

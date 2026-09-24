@@ -28,12 +28,6 @@ export default function FounderDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (isAuthenticated && isFounderUser) {
-      fetchMetrics()
-    }
-  }, [isAuthenticated, isFounderUser])
-
   const fetchMetrics = async () => {
     try {
       setLoading(true)
@@ -53,6 +47,12 @@ export default function FounderDashboard() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated && isFounderUser) {
+      queueMicrotask(() => fetchMetrics())
+    }
+  }, [isAuthenticated, isFounderUser])
 
   if (!isAuthenticated) {
     return (
