@@ -1,0 +1,4 @@
+* text=auto
+
+# Vendored / build output never tracked
+node_modules/** linguist-vendored
