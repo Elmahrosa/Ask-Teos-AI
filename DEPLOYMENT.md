@@ -1,27 +1,49 @@
 # Deployment Guide
 
-## Frontend Deployment (Vercel)
+## Live target: Vercel Hobby (free)
 
-### Automatic Deployment via GitHub
+`Ask-Teos-AI` runs as a **Next.js** frontend on **Vercel Hobby** (free tier).
+No paid hosting is used. Legacy hosts (Railway, Hostinger, Pi App Engine) are
+**lapsed and out of scope** — URLs on those services are dead and must not be
+used.
 
-1. **Connect Repository**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import `github.com/Elmahrosa/Ask-Teos-AI`
+### Vercel dashboard settings (copy-paste)
 
-2. **Configure Environment Variables**
-   ```
-   GITHUB_TOKEN=your_github_personal_access_token
-   TAVILY_API_KEY=your_tavily_api_key
-   POSTHOG_KEY=your_posthog_api_key
-   TEOS_RPC=your_solana_rpc_endpoint
-   ```
+| Setting | Value |
+|---|---|
+| Framework Preset | **Next.js** (auto-detected) |
+| Root Directory | `/` (repo root; `package.json` + `next.config.mjs` at root — not a monorepo) |
+| Build Command | default (`next build`) |
+| Install Command | default (`npm install`; `package-lock.json` present) |
+| Node.js Version | **22.x** (Next 16 requires ≥ 20.9; 22.x matches the CI matrix) |
+| Output Directory | default |
 
-3. **Deploy**
-   - Click "Deploy"
-   - Vercel will automatically deploy on every push to main branch
+Verified locally on this branch: `npm ci && npm run build` succeeds with **no
+environment variables** and with the `.env.example` values — **no env var is
+required at build time**; every variable below is runtime-only.
 
-### Manual Deployment
+### Environment variables to add in Vercel (names only — values go in Vercel, never in git)
+
+| Variable | Required | Notes |
+|---|---|---|
+| `OLLAMA_BASE_URL`, `OLLAMA_MODEL` | no | local LLM provider |
+| `GROQ_API_KEY`, `GROQ_MODEL` | no | cloud LLM provider |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | no | cloud LLM provider |
+| `TAVILY_API_KEY` | no | deep search |
+| `GITHUB_TOKEN` | no | raises GitHub API rate limit |
+| `POSTHOG_KEY`, `POSTHOG_HOST`, `NEXT_PUBLIC_POSTHOG_KEY` | no | analytics |
+| `TEOS_RPC`, `NEXT_PUBLIC_TEOS_RPC` | no | Solana RPC endpoint |
+| `TEOS_AGENT_URL`, `TEOS_AGENT_API_KEY` | agent only | private agent-service endpoint + service key (server-side) |
+| `TEOS_AGENT_AUTH_MODE`, `TEOS_AGENT_PI_JWKS_URL` | agent only | caller auth (`pi`/`none`) + Pi public-key endpoint |
+| `TEOS_AGENT_TIMEOUT_MS`, `TEOS_AGENT_RATE_LIMIT_PER_MIN`, `TEOS_AGENT_AUDIT_DIR` | no | per-run deadline / per-user limit / digest-only audit store |
+
+### Automatic deployment via GitHub
+
+1. Go to [vercel.com/new](https://vercel.com/new), import `github.com/Elmahrosa/Ask-Teos-AI`.
+2. Apply the settings above; add the env var **names** you need (Vercel stores the values).
+3. Deploy. Vercel deploys automatically on every push to `main`, plus per-PR previews.
+
+### Manual deployment
 
 ```bash
 # Install Vercel CLI
@@ -31,14 +53,7 @@ npm i -g vercel
 vercel --prod
 ```
 
-## Backend Deployment
-
-Currently hosted at Pi App Engine:
-```
-https://backend.appstudio-u7cm9zhmha0ruwv8.piappengine.com
-```
-
-### TEOS AI Agent (private service)
+## TEOS AI Agent (private service)
 
 The TEOS AI agent capability is served by a **private** agent service that must
 never be reachable from the public internet. The public app talks to it through
@@ -60,21 +75,26 @@ Required app-side environment (see `teos-ai-agent-integration/deployment.md`):
 The route is **POST-only**, verifies the Pi access token server-side, rate-limits
 per user, and writes a digest-only audit record; audit-write failure fails closed.
 
-### Alternative: Render.com
+## Backend
 
-1. **Create Web Service**
-   - Go to [render.com](https://render.com)
-   - Connect GitHub repository (backend)
-   - Select "Web Service"
+The legacy frontend backend referenced by `lib/system-config.ts`
+(`BACKEND_CONFIG.BASE_URL`) was hosted on **Pi App Engine** and is **dead** (the
+subscription lapsed). Restore a live backend before relying on features that use
+it, and replace the URL in `lib/system-config.ts` (currently a locked /
+auto-generated file) with the new backend URL. Replacing the backend host is
+**out of scope** for the Vercel-live task.
 
-2. **Configure**
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-   - Add environment variables
+## CI/CD Pipeline
 
-3. **Auto-Deploy**
-   - Enable "Auto-Deploy" for main branch
-   - Render will rebuild on every push
+GitHub Actions automatically runs on:
+- Push to main/develop
+- Pull requests
+
+Pipeline includes:
+- Dependency installation
+- Linting
+- Build verification
+- Test execution (`vitest run`)
 
 ## Monitoring Setup
 
@@ -92,31 +112,6 @@ per user, and writes a digest-only audit record; audit-write failure fails close
 2. Get API key from Project Settings
 3. Add `POSTHOG_KEY` to environment variables
 
-## CI/CD Pipeline
-
-GitHub Actions automatically runs on:
-- Push to main/develop
-- Pull requests
-
-Pipeline includes:
-- Dependency installation
-- Linting
-- Build verification
-- Test execution (if configured)
-
-## Environment Variables Reference
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GITHUB_TOKEN` | Optional | Increases GitHub API rate limit |
-| `TAVILY_API_KEY` | Optional | Enables deep search |
-| `POSTHOG_KEY` | Optional | Enables analytics |
-| `TEOS_RPC` | Optional | Solana RPC endpoint |
-| `FOUNDER_JWT_SECRET` | Backend | JWT verification secret |
-| `TEOS_AGENT_URL` / `TEOS_AGENT_API_KEY` | Agent only | Private agent-service endpoint + service key (server-side) |
-| `TEOS_AGENT_AUTH_MODE` / `TEOS_AGENT_PI_JWKS_URL` | Agent only | Caller auth (`pi`/`none`) + Pi key endpoint |
-| `TEOS_AGENT_AUDIT_DIR` / `TEOS_AGENT_RATE_LIMIT_PER_MIN` | Agent only | Audit store + per-user limit |
-
 ## Post-Deployment Checklist
 
 - [ ] Test Pi Network authentication
@@ -130,18 +125,17 @@ Pipeline includes:
 ## Troubleshooting
 
 ### Build Fails
-- Check Node.js version (18.x or 20.x required)
+- Check Node.js version (22.x recommended; Next 16 requires ≥ 20.9)
 - Verify all dependencies in package.json
-- Check environment variables
+- No environment variables are required at build time — build failures are **not**
+  caused by missing Vercel env vars
 
 ### API Errors
-- Verify backend URL in `lib/system-config.ts`
+- Backend URL in `lib/system-config.ts` is currently a **dead** Pi App Engine URL —
+  confirm a live backend is configured
 - Check Pi Network authentication
 - Verify API keys are set correctly
 
 ### GitHub Metrics Not Loading
 - Add `GITHUB_TOKEN` for higher rate limits
 - Check repository name and owner in API route
-```
-
-```typescript file="" isHidden

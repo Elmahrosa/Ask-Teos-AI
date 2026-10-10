@@ -23,7 +23,7 @@ It combines live knowledge from the internet with local LLMs (Ollama) and option
 - Aligned with ICBC governance expectations
 
 ## Deployment
-Recommended: Docker deployment under the Elmahrosa organization, with authentication, policy enforcement, and audit logging layered on top.
+Live target: **Vercel Hobby (free)** — see [`DEPLOYMENT.md`](DEPLOYMENT.md) for the exact dashboard settings and environment variables. Legacy hosts (Railway, Hostinger, Pi App Engine) are lapsed and out of scope.
 
 ## Current Status vs Roadmap
 
