@@ -13,8 +13,13 @@ export const PI_NETWORK_CONFIG = {
 } as const;
 
 // Backend Configuration
+// CHANGED 2026-10-10 (owner-authorized): the former Pi App Engine host is dead
+// (subscription lapsed). The base URL is now env-driven — set
+// NEXT_PUBLIC_BACKEND_URL in the host (e.g. Vercel) once a live backend is
+// restored; falls back to a non-resolving placeholder otherwise.
 export const BACKEND_CONFIG = {
-  BASE_URL: "https://backend.appstudio-u7cm9zhmha0ruwv8.piappengine.com",
+  BASE_URL:
+    process.env.NEXT_PUBLIC_BACKEND_URL || "https://backend.invalid",
 } as const;
 
 // Backend URLs - AUTO-GENERATED
