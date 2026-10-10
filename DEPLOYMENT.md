@@ -38,6 +38,28 @@ Currently hosted at Pi App Engine:
 https://backend.appstudio-u7cm9zhmha0ruwv8.piappengine.com
 ```
 
+### TEOS AI Agent (private service)
+
+The TEOS AI agent capability is served by a **private** agent service that must
+never be reachable from the public internet. The public app talks to it through
+the protected route `POST /api/teos/agent` using a service-to-service key kept
+server-side only.
+
+Required app-side environment (see `teos-ai-agent-integration/deployment.md`):
+
+| Variable | Required | Description |
+|---|---|---|
+| `TEOS_AGENT_URL` | yes | Private URL of the agent service (e.g. `http://teos-agent:8000`) |
+| `TEOS_AGENT_API_KEY` | yes | Service-to-service secret (server only; never exposed to the browser) |
+| `TEOS_AGENT_TIMEOUT_MS` | no | Client deadline, default `150000` |
+| `TEOS_AGENT_AUTH_MODE` | no | `pi` (default, server-side RS256 verification) or `none` (dev only) |
+| `TEOS_AGENT_PI_JWKS_URL` | no | Pi public-key endpoint; the route fails closed if unreachable |
+| `TEOS_AGENT_RATE_LIMIT_PER_MIN` | no | Per-user limit, default `12` |
+| `TEOS_AGENT_AUDIT_DIR` | no | App-side audit (JSONL, digest-only), default `./data/audit` |
+
+The route is **POST-only**, verifies the Pi access token server-side, rate-limits
+per user, and writes a digest-only audit record; audit-write failure fails closed.
+
 ### Alternative: Render.com
 
 1. **Create Web Service**
@@ -91,6 +113,9 @@ Pipeline includes:
 | `POSTHOG_KEY` | Optional | Enables analytics |
 | `TEOS_RPC` | Optional | Solana RPC endpoint |
 | `FOUNDER_JWT_SECRET` | Backend | JWT verification secret |
+| `TEOS_AGENT_URL` / `TEOS_AGENT_API_KEY` | Agent only | Private agent-service endpoint + service key (server-side) |
+| `TEOS_AGENT_AUTH_MODE` / `TEOS_AGENT_PI_JWKS_URL` | Agent only | Caller auth (`pi`/`none`) + Pi key endpoint |
+| `TEOS_AGENT_AUDIT_DIR` / `TEOS_AGENT_RATE_LIMIT_PER_MIN` | Agent only | Audit store + per-user limit |
 
 ## Post-Deployment Checklist
 
