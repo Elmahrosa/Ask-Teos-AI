@@ -33,6 +33,7 @@ required at build time**; every variable below is runtime-only.
 | `GITHUB_TOKEN` | no | raises GitHub API rate limit |
 | `POSTHOG_KEY`, `POSTHOG_HOST`, `NEXT_PUBLIC_POSTHOG_KEY` | no | analytics |
 | `TEOS_RPC`, `NEXT_PUBLIC_TEOS_RPC` | no | Solana RPC endpoint |
+| `NEXT_PUBLIC_BACKEND_URL` | no | live backend base URL — set once a backend is restored (placeholder `https://backend.invalid` otherwise) |
 | `TEOS_AGENT_URL`, `TEOS_AGENT_API_KEY` | agent only | private agent-service endpoint + service key (server-side) |
 | `TEOS_AGENT_AUTH_MODE`, `TEOS_AGENT_PI_JWKS_URL` | agent only | caller auth (`pi`/`none`) + Pi public-key endpoint |
 | `TEOS_AGENT_TIMEOUT_MS`, `TEOS_AGENT_RATE_LIMIT_PER_MIN`, `TEOS_AGENT_AUDIT_DIR` | no | per-run deadline / per-user limit / digest-only audit store |
