@@ -17,3 +17,6 @@ build/
 # Backup / temp
 *.backup*
 *.tmp
+
+# Local server-side data (agent audit trail, captures) — never commit
+/data/
