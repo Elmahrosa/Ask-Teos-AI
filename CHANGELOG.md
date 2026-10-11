@@ -2,6 +2,26 @@
 
 All notable changes to Ask-TEOS-AI will be documented in this file.
 
+## [1.0.1] - 2026-10-11
+
+### Removed
+- **Pi Network integration (entire)** — owner directive ("delete pi at all"):
+  - Deleted `hooks/use-pi-network-authentication.ts`, `lib/pi-auth.ts`,
+    `lib/__tests__/pi-auth.test.ts`, `hooks/use-founder-status.ts`,
+    `lib/founder-auth.ts`, and `FOUNDER_GUIDE.md`
+  - Chat loads directly (no Pi login gate); founder dashboard is now open
+    (it only exposes public GitHub metrics)
+  - `POST /api/teos/agent`: caller authentication removed; still rate-limited
+    per source IP and audit-fail-closed
+  - Package renamed `pi-network-chatbot` → `ask-teos-ai`
+  - Pi branding/content removed from the homepage, TEOS ecosystem data,
+    offline AI answers, and env/deployment docs
+
+### Changed
+- **Tailwind v4 migration (PR #12)** — repairs `main` after the Dependabot
+  tailwindcss 3→4 bump: `@tailwindcss/postcss` plugin, CSS-first setup in
+  `app/globals.css`, `tw-animate-css` replaces `tailwindcss-animate`
+
 ## [1.0.0] - 2025-01-02
 
 ### Added

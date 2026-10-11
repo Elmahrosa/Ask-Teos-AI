@@ -19,7 +19,7 @@ function sampleEvent(overrides: Partial<AgentAuditEvent> = {}): AgentAuditEvent 
     request_id: "req_test",
     ts: new Date().toISOString(),
     service: "ask-teos-ai",
-    user: { kind: "pi", user_id: "uid-1", is_founder: false },
+    user: { kind: "unauthenticated", user_id: "uid-1", is_founder: false },
     authz: "allowed",
     persona: "know",
     model: "local",

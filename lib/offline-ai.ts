@@ -87,12 +87,6 @@ export function generateOfflineResponse(userMessage: string, restrictToOfficialS
     return `TeosPump Launchpad: ${launchpad?.description}. This is the official token launch platform for the TEOS ecosystem, enabling fair and decentralized token distribution.`
   }
 
-  // Bridge questions
-  if (message.includes("bridge") || message.includes("pi network")) {
-    const bridge = TEOS_CORE_REPOS.find((r) => r.name === "Pi-TEOS Bridge")
-    return `Pi-TEOS Bridge: ${bridge?.description}. This bridge connects Pi Network with TEOS blockchain, enabling seamless cross-chain asset transfers and interoperability between both networks.`
-  }
-
   // Governance questions
   if (message.includes("governance") || message.includes("voting") || message.includes("dao")) {
     const governance = TEOS_CORE_REPOS.find((r) => r.name === "Teos Governance")
@@ -118,7 +112,7 @@ export function generateOfflineResponse(userMessage: string, restrictToOfficialS
 
   // Repository search
   if (message.includes("repo") || message.includes("repository") || message.includes("github")) {
-    const searchResults = searchTeosEcosystem(message, "balanced", [], restrictToOfficialSources)
+    const searchResults = searchTeosEcosystem(message, "balanced", restrictToOfficialSources)
     if (searchResults.length > 0) {
       return `Found ${searchResults.length} matching repositories:\n\n${searchResults.slice(0, 5).join("\n")}\n\nVisit github.com/Elmahrosa for the complete list of 43+ TEOS repositories.`
     }
@@ -137,7 +131,7 @@ export function generateOfflineResponse(userMessage: string, restrictToOfficialS
 
   // Technology stack
   if (message.includes("tech") || message.includes("stack") || message.includes("built")) {
-    return `TEOS Tech Stack:\n\n• Frontend: React + TypeScript\n• Backend: Express.js\n• Blockchain: TEOS Sovereign Blockchain\n• AI: TEOS Knowledge Base (43+ repos)\n• Search: Tavily Deep Search\n• Analytics: PostHog\n• Bridge: Pi Network ↔ TEOS\n\nDeployed on Vercel (frontend) and Render.com (backend) with automated CI/CD via GitHub Actions.`
+    return `TEOS Tech Stack:\n\n• Frontend: React + TypeScript\n• Backend: Express.js\n• Blockchain: TEOS Sovereign Blockchain\n• AI: TEOS Knowledge Base (43+ repos)\n• Search: Tavily Deep Search\n• Analytics: PostHog\n\nDeployed on Vercel (frontend) and Render.com (backend) with automated CI/CD via GitHub Actions.`
   }
 
   // System explanation
@@ -155,7 +149,7 @@ export function generateOfflineResponse(userMessage: string, restrictToOfficialS
   }
 
   // Search attempt
-  const searchResults = searchTeosEcosystem(message, "balanced", [], restrictToOfficialSources)
+  const searchResults = searchTeosEcosystem(message, "balanced", restrictToOfficialSources)
   if (searchResults.length > 0) {
     return `I found information related to your query:\n\n${searchResults.slice(0, 3).join("\n")}\n\nWould you like to know more about any specific component?`
   }

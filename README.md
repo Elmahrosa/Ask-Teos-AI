@@ -23,13 +23,12 @@ It combines live knowledge from the internet with local LLMs (Ollama) and option
 - Aligned with ICBC governance expectations
 
 ## Deployment
-Live target: **Vercel Hobby (free)** — see [`DEPLOYMENT.md`](DEPLOYMENT.md) for the exact dashboard settings and environment variables. Legacy hosts (Railway, Hostinger, Pi App Engine) are lapsed and out of scope.
+Live target: **Vercel Hobby (free)** — see [`DEPLOYMENT.md`](DEPLOYMENT.md) for the exact dashboard settings and environment variables. Legacy hosts (Railway, Hostinger) are lapsed and out of scope.
 
 ## Current Status vs Roadmap
 
 **Currently shipped (verified in code):**
 - AI chat interface
-- Pi Network authentication
 - Founder dashboard
 - CI/CD pipeline
 - Multi-provider LLM routing (Ollama, Groq, Gemini with fallback)

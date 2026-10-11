@@ -4,8 +4,6 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import type { Message } from "@/lib/types"
-import { usePiNetworkAuthentication } from "./use-pi-network-authentication"
-import { useFounderStatus } from "./use-founder-status"
 import { APP_CONFIG } from "@/lib/app-config"
 import { llmService } from "@/lib/llm/service"
 import { SearchMode, getSearchModeConfig } from "@/lib/search/types"
@@ -19,10 +17,6 @@ const createMessage = (text: Message["text"], sender: Message["sender"], id?: Me
 })
 
 export const useChatbot = () => {
-  const { isAuthenticated, authMessage, piAccessToken } = usePiNetworkAuthentication()
-
-  const { isFounderUser } = useFounderStatus(piAccessToken)
-
   const [messages, setMessages] = useState<Message[]>([createMessage(APP_CONFIG.WELCOME_MESSAGE, "ai", "1")])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -117,9 +111,6 @@ export const useChatbot = () => {
     messages,
     input,
     isLoading,
-    isAuthenticated,
-    authMessage,
-    isFounderUser,
     offlineMode,
     searchMode,
     restrictToOfficialSources,

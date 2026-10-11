@@ -19,7 +19,7 @@ export async function trackChatMessage(userId: string, message: string, isFounde
 /**
  * Track authentication event
  */
-export async function trackAuth(userId: string, success: boolean, method = "pi-network"): Promise<void> {
+export async function trackAuth(userId: string, success: boolean, method = "teos"): Promise<void> {
   try {
     await posthog.capture({
       distinctId: userId,
