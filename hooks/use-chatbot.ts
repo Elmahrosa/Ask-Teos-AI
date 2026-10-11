@@ -5,7 +5,6 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import type { Message } from "@/lib/types"
 import { APP_CONFIG } from "@/lib/app-config"
-import { llmService } from "@/lib/llm/service"
 import { SearchMode, getSearchModeConfig } from "@/lib/search/types"
 
 // Helper function to create messages
@@ -72,7 +71,27 @@ export const useChatbot = () => {
       }
 
       const allMessages = [systemMessage, ...llmMessages]
-      const aiResponse = await llmService.generateResponse(allMessages, searchMode, restrictToOfficialSources)
+
+      // Route through the server-side chat bridge so the LLM API key never
+      // ships to the browser (see /api/teos/chat). The server keeps the same
+      // offline fallback when no cloud provider is configured.
+      const res = await fetch("/api/teos/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: allMessages,
+          search_mode: searchMode,
+          restrict_to_official_sources: restrictToOfficialSources,
+        }),
+      })
+      const payload = (await res.json()) as {
+        answer?: string
+        error?: { code?: string; message?: string }
+      }
+      if (!res.ok || typeof payload.answer !== "string") {
+        throw new Error(payload.error?.message || "chat service error")
+      }
+      const aiResponse = payload.answer
       const botMessage = createMessage(aiResponse, "ai")
       setMessages((prev) => [...prev, botMessage])
     } catch (error) {

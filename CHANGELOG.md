@@ -2,6 +2,20 @@
 
 All notable changes to Ask-TEOS-AI will be documented in this file.
 
+## [1.0.2] - 2026-10-11
+
+### Changed
+- **Chat runs a real cloud LLM server-side** (fixes the "ol/offline" replies):
+  - The chat widget no longer imports `llmService` from the browser (where
+    non-`NEXT_PUBLIC_*` env vars can never exist, so no LLM key was ever
+    reachable and every reply fell back to the offline knowledge base).
+  - New server-only bridge `POST /api/teos/chat` executes `llmService` server
+    side: zod-strict schema, per-IP rate limit, stable `{error:{code,message}}`
+    envelope, offline fallback preserved. `hooks/use-chatbot.ts` posts to it.
+  - `GROQ_API_KEY` set in Vercel (Production/Preview/Development, 2026-10-11).
+  - Groq default model fixed to `openai/gpt-oss-120b` (`llama3-8b-8192` is no
+    longer served by Groq — verified via the models API).
+
 ## [1.0.1] - 2026-10-11
 
 ### Removed
