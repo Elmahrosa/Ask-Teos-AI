@@ -6,7 +6,7 @@ export class GroqProvider implements LLMProvider {
 
   constructor() {
     this.apiKey = process.env.GROQ_API_KEY || '';
-    this.model = process.env.GROQ_MODEL || 'llama3-8b-8192'; // Default to Llama 3 8B on Groq
+    this.model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b'; // Served model (verified 2026-10-11); overridable via GROQ_MODEL
   }
 
   async isAvailable(): Promise<boolean> {

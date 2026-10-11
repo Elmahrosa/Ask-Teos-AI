@@ -27,8 +27,8 @@ required at build time**; every variable below is runtime-only.
 | Variable | Required | Notes |
 |---|---|---|
 | `OLLAMA_BASE_URL`, `OLLAMA_MODEL` | no | local LLM provider |
-| `GROQ_API_KEY`, `GROQ_MODEL` | no | cloud LLM provider |
-| `GEMINI_API_KEY`, `GEMINI_MODEL` | no | cloud LLM provider |
+| `GROQ_API_KEY`, `GROQ_MODEL` | no | cloud LLM provider — **server-only** (used by `POST /api/teos/chat`); `GROQ_API_KEY` was set for Production/Preview/Development on 2026-10-11 |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | no | cloud LLM provider (server-only) |
 | `TAVILY_API_KEY` | no | deep search |
 | `GITHUB_TOKEN` | no | raises GitHub API rate limit |
 | `POSTHOG_KEY`, `POSTHOG_HOST`, `NEXT_PUBLIC_POSTHOG_KEY` | no | analytics |
@@ -73,6 +73,25 @@ Required app-side environment (see `teos-ai-agent-integration/deployment.md`):
 The route is **POST-only**, rate-limits per source IP, and writes a digest-only
 audit record; audit-write failure fails closed. Caller authentication was
 removed with the (deleted) third-party auth dependency.
+
+## Public chat route (server-side LLM bridge)
+
+`POST /api/teos/chat` is the **only** surface that executes `llmService`
+server-side. The chat widget used to import `llmService` directly from the
+browser, where non-`NEXT_PUBLIC_*` env vars (and therefore any LLM key) can
+never be present — so the live chat always fell back to the offline knowledge
+base. The widget now posts its conversation here.
+
+| Variable | Required | Description |
+|---|---|---|
+| `GROQ_API_KEY` | no | Groq API key (server-only) — set 2026-10-11 for Production/Preview/Development |
+| `GROQ_MODEL` | no | Groq model, default `openai/gpt-oss-120b` (succeeds `llama3-8b-8192`, no longer served by Groq) |
+| `TEOS_CHAT_RATE_LIMIT_PER_MIN` | no | Per-IP chat rate limit, default `12` (in-memory fixed window) |
+
+The route is zod-strict (no unknown fields), rate-limits per source IP, and
+returns a stable `{error:{code,message}}` envelope. Provider/model internals
+are never leaked to the client. The offline knowledge-base fallback still
+applies server-side when no cloud provider is configured.
 
 ## Backend
 
