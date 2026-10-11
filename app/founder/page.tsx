@@ -5,8 +5,6 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { usePiNetworkAuthentication } from "@/hooks/use-pi-network-authentication"
-import { useFounderStatus } from "@/hooks/use-founder-status"
 import { Activity, GitBranch, GitFork, GitPullRequest, Star, Users, TrendingUp, MessageSquare } from "lucide-react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
@@ -22,8 +20,6 @@ interface GitHubMetrics {
 }
 
 export default function FounderDashboard() {
-  const { isAuthenticated, piAccessToken } = usePiNetworkAuthentication()
-  const { isFounderUser, userId } = useFounderStatus(piAccessToken)
   const [metrics, setMetrics] = useState<GitHubMetrics | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -49,44 +45,8 @@ export default function FounderDashboard() {
   }
 
   useEffect(() => {
-    if (isAuthenticated && isFounderUser) {
-      queueMicrotask(() => fetchMetrics())
-    }
-  }, [isAuthenticated, isFounderUser])
-
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please authenticate with Pi Network</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    )
-  }
-
-  if (!isFounderUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Access Denied</CardTitle>
-            <CardDescription>This dashboard is only accessible to founders.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">Your User ID: {userId || "Unknown"}</p>
-            <Link href="/">
-              <Button className="w-full" style={{ backgroundColor: COLORS.PRIMARY }}>
-                Return to Chat
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+    queueMicrotask(() => fetchMetrics())
+  }, [])
 
   return (
     <div className="min-h-screen p-4 md:p-8" style={{ backgroundColor: COLORS.BACKGROUND }}>
@@ -97,7 +57,7 @@ export default function FounderDashboard() {
             <h1 className="text-3xl font-bold" style={{ color: COLORS.PRIMARY }}>
               Founder Dashboard
             </h1>
-            <p className="text-muted-foreground mt-1">Welcome back, {userId}</p>
+            <p className="text-muted-foreground mt-1">TEOS ecosystem dashboard</p>
           </div>
           <div className="flex gap-2">
             <Badge variant="outline" className="flex items-center gap-1">
@@ -203,7 +163,6 @@ export default function FounderDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <FeatureStatus name="Founder Authentication" status="active" />
               <FeatureStatus name="Unlimited Messaging" status="active" />
               <FeatureStatus name="GitHub Metrics API" status="active" />
               <FeatureStatus name="Tavily Deep Search" status="pending" description="Requires TAVILY_API_KEY" />

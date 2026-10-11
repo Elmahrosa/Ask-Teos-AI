@@ -1,5 +1,4 @@
 import { getSearchModeConfig, SearchMode } from "@/lib/search/types";
-import { isAllowedDomain, TEOS_ALLOWED_DOMAINS } from "@/lib/domains/utils";
 // TEOS Ecosystem Knowledge Base
 // Complete information about TEOS Egypt's sovereign blockchain ecosystem
 
@@ -75,7 +74,6 @@ export const TEOS_TECH_STACK = {
   ai: "TEOS Knowledge Base + 43 Repositories",
   search: "Tavily Deep Search",
   analytics: "PostHog",
-  bridge: "Pi Network ↔ TEOS Bridge",
 } as const
 
 export const TEOS_CORE_REPOS = [
@@ -100,11 +98,6 @@ export const TEOS_CORE_REPOS = [
     category: "Governance",
   },
   {
-    name: "Pi-TEOS Bridge",
-    description: "Cross-chain bridge between Pi Network and TEOS",
-    category: "Bridge",
-  },
-  {
     name: "Digital Passport",
     description: "Blockchain-based digital identity system",
     category: "Identity",
@@ -113,16 +106,6 @@ export const TEOS_CORE_REPOS = [
     name: "Bankchain",
     description: "Decentralized banking infrastructure",
     category: "Banking",
-  },
-  {
-    name: "PiTaxi",
-    description: "Decentralized ride-sharing platform",
-    category: "Transportation",
-  },
-  {
-    name: "PiNode Tools",
-    description: "Node management and monitoring tools",
-    category: "Infrastructure",
   },
   {
     name: "Teos Mining Bot",
@@ -142,7 +125,6 @@ export const TEOS_DAPPS = [
   "Teos Governance - DAO governance system",
   "Bankchain - Decentralized banking",
   "Digital Passport - Blockchain identity",
-  "PiTaxi - Ride-sharing DApp",
   "Teos Mining - Mining operations",
   "Teos Staking - Token staking rewards",
 ] as const
@@ -167,7 +149,7 @@ export const TEOS_INTEGRATIONS = {
   analytics: {
     provider: "PostHog",
     envVar: "POSTHOG_KEY",
-    events: ["chat_query", "pi_login_attempt"],
+    events: ["chat_query"],
   },
   cicd: {
     platform: "GitHub Actions",
@@ -213,7 +195,6 @@ export const TEOS_CONSTITUTION = {
     "FPBE-First-Pimisr-Bank-Elmahrosa: Civic-first banking backbone",
     "Digital-Reconstruction-of-Gaza: Humanitarian reconstruction",
     "ERT-LAUNCH: Founder token injection",
-    "ElMahrosa-Pi-Smart-City: Pi SDK urban governance",
     "Teos-Gold-Reserve: Gold-backed stability",
     "TEOS-AI-Auditor: Transparency enforcement",
     "TEOS-NFT-AI-Generator: NFT minting, royalties, staking",
@@ -224,11 +205,10 @@ export const TEOS_CONSTITUTION = {
     phase2: "FPBE Bank Backbone - Route all flows through FPBE",
     phase3: "Gaza Reconstruction - Humanitarian pipelines",
     phase4: "ERT Launch - Founder injection and TEOS+ERT activation",
-    phase5: "Pi Smart City - Governance via Pi SDK",
-    phase6: "AI Auditor - Automated transparency enforcement",
-    phase7: "NFT Generator - Minting, royalties, and staking",
-    phase8: "Salma Hospital - Healthcare impact rails",
-    phase9: "Teos-Gold-Reserve - Convert liquidity to real gold (final step)",
+    phase5: "AI Auditor - Automated transparency enforcement",
+    phase6: "NFT Generator - Minting, royalties, and staking",
+    phase7: "Salma Hospital - Healthcare impact rails",
+    phase8: "Teos-Gold-Reserve - Convert liquidity to real gold (final step)",
   },
   licensing: {
     community: "MIT - Free for civic contributors, students, humanitarian partners",
@@ -245,11 +225,10 @@ export const TEOS_ALL_REPOS = {
     wallet: ["TeosWallet", "TeosWallet-Mobile", "TeosWallet-Extension"],
     defi: ["TeosPump-Launchpad", "TEOS-DEX", "TEOS-Liquidity-Pool", "TEOS-Swap", "TEOS-Farming"],
     governance: ["Teos-Governance", "TEOS-DAO", "TEOS-Voting", "TEOS-Proposals"],
-    bridge: ["Pi-TEOS-Bridge", "TEOS-Bridge-SDK", "Bridge-Validator"],
+    bridge: ["TEOS-Bridge-SDK", "Bridge-Validator"],
     identity: ["Digital-Passport", "TEOS-Identity", "KYC-Verifier"],
     banking: ["Bankchain", "TEOS-Bank-API", "Payment-Gateway", "FPBE-First-Pimisr-Bank-Elmahrosa"],
-    transportation: ["PiTaxi", "PiTaxi-Driver", "PiTaxi-Rider"],
-    infrastructure: ["PiNode-Tools", "TEOS-Explorer", "TEOS-Analytics", "Network-Monitor"],
+    infrastructure: ["TEOS-Explorer", "TEOS-Analytics", "Network-Monitor"],
     mining: ["Teos-Mining-Bot", "Mining-Pool", "Hashrate-Optimizer"],
     staking: ["Teos-Staking", "Staking-Rewards", "Validator-Manager"],
     developer: ["TEOS-SDK", "TEOS-API", "Developer-Docs", "Smart-Contract-Templates"],
@@ -257,7 +236,6 @@ export const TEOS_ALL_REPOS = {
     humanitarian: ["Digital-Reconstruction-of-Gaza", "salma-unity-care-hospital"],
     assets: ["Teos-Gold-Reserve", "ERT-LAUNCH"],
     ai: ["TEOS-AI-Auditor", "TEOS-NFT-AI-Generator"],
-    smartCity: ["ElMahrosa-Pi-Smart-City"],
   },
 } as const
 
@@ -285,11 +263,10 @@ ASK-TEOS-AI | TEOS Egypt Gateway
     - Teos-Gold-Reserve
     - TEOS-AI-Auditor
     - TEOS-NFT-AI-Generator
-    - ElMahrosa Pi Smart City
     - Salma Unity Care Hospital
 
-13. Core TEOS Repos: Sovereign System, Wallet, Launchpad, Governance, Pi Bridge, Digital Passport, Bankchain, PiTaxi, Mining, Staking.
-14. DApps Supported: Wallet, Launchpad, Governance, Bankchain, Passport, Taxi, Mining, NFT Generator.
+13. Core TEOS Repos: Sovereign System, Wallet, Launchpad, Governance, Digital Passport, Bankchain, Mining, Staking.
+14. DApps Supported: Wallet, Launchpad, Governance, Bankchain, Passport, Mining, NFT Generator.
 15. Vision: Egypt digital sovereignty + UN SDG + Vision 2030 + Civic-First Constitution.
 16. Global Standing: #3 worldwide, ahead of regional initiatives, alongside EU EBSI and Sovrin Network.
 17. Motto: "Sign With It" - Petition-first onboarding, badge enforcement, transparent vault registry.
@@ -299,7 +276,6 @@ ASK-TEOS-AI | TEOS Egypt Gateway
 export function searchTeosEcosystem(
   query: string,
   mode: SearchMode = "balanced",
-  allowedDomains: string[] = [],
   restrictToOfficialSources: boolean = false
 ): string[] {
   const lowerQuery = query.toLowerCase()
@@ -336,13 +312,9 @@ export function searchTeosEcosystem(
   // If restriction is enabled, filter to official TEOS/Elmahrosa sources
   if (restrictToOfficialSources) {
     // For internal TEOS knowledge base search, all results are considered official
-    // since they come from the TEOS ecosystem repositories
-    // When integrating with external web search (e.g., Tavily), we would:
-    // 1. Extract URLs from search results
-    // 2. Filter them using isAllowedDomain(url, TEOS_ALLOWED_DOMAINS)
-    // 3. Keep only results where isAllowedDomain returns true
-    // For now, since we search only internal knowledge base, no filtering is needed
-    // All results are implicitly from official TEOS/Elmahrosa sources
+    // since they come from the TEOS ecosystem repositories. When integrating
+    // external web search (e.g., Tavily), results should be filtered with a
+    // domain allow-list; for now only the internal knowledge base is searched.
   }
 
   return limitedResults;

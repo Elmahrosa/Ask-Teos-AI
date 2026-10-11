@@ -37,13 +37,12 @@ actually in the repo today — not aspirational claims.
 | Search-query suggestions | Not present | Nice-to-have | Simple prefix or LLM-based suggestion | Later |
 | Trending/"discover" content feed | Not present | Low relevance to this repo's purpose | Skip | Low |
 | Local, auditable search/chat history | Not confirmed | Yes — needed for an audit trail | Store chat history under a TEOS audit index | High |
-| Authentication | **Present** (Pi Network + founder auth) | Already ahead of baseline | Keep and harden; integrate with TEOS AI Guard / Auditor | Keep |
+| Authentication | **Removed** (2026-10-11) — former third-party auth deleted by owner directive | — | Reintroduce only with a self-hosted, auditable identity layer (e.g. TEOS ID / JWT) if founder gating becomes required | Later |
 
 ## 3. Current vs. Roadmap
 
 **Shipped (confirm before stating publicly):**
 - AI chat interface
-- Pi Network authentication
 - Founder dashboard
 - CI/CD pipeline
 - Multi-provider LLM routing (Ollama, Groq, Gemini with fallback)

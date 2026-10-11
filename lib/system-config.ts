@@ -4,17 +4,9 @@
 // This file contains configuration values that should not be modified during normal app customization.
 // These values are set during app creation.
 
-export const APP_ID = "69542ecd8d35a37806855a03";
-
-// Pi Network Configuration
-export const PI_NETWORK_CONFIG = {
-  SDK_URL: "https://sdk.minepi.com/pi-sdk.js",
-  SANDBOX: false,
-} as const;
-
 // Backend Configuration
-// CHANGED 2026-10-10 (owner-authorized): the former Pi App Engine host is dead
-// (subscription lapsed). The base URL is now env-driven — set
+// CHANGED 2026-10-10 (owner-authorized): the former backend App Engine host is
+// dead (subscription lapsed). The base URL is now env-driven — set
 // NEXT_PUBLIC_BACKEND_URL in the host (e.g. Vercel) once a live backend is
 // restored; falls back to a non-resolving placeholder otherwise.
 export const BACKEND_CONFIG = {

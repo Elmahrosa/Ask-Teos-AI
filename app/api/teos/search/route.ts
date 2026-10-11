@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Query parameter 'q' is required" }, { status: 400 })
   }
 
-  const results = searchTeosEcosystem(query, "balanced", [], restrict)
+  const results = searchTeosEcosystem(query, "balanced", restrict)
 
   return NextResponse.json({
     query,

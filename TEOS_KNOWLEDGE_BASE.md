@@ -18,11 +18,8 @@
     - TeosWallet
     - TeosPump Launchpad
     - Teos Governance
-    - Pi↔TEOS Bridge
     - Digital Passport
     - Bankchain
-    - PiTaxi
-    - PiNode Tools
     - Teos Mining Bot + Staking
 
 11. **DApps Supported**: Wallet, Launchpad, Governance, Bankchain, Passport, Taxi, Mining.
@@ -60,7 +57,7 @@
 - **AI**: TEOS Knowledge Base + 43 Repositories
 - **Search**: Tavily Deep Search
 - **Analytics**: PostHog
-- **Bridge**: Pi Network ↔ TEOS Bridge
+- **Deployment**: Vercel (frontend), Render (backend)
 
 ---
 
@@ -90,8 +87,7 @@
 - TEOS-Voting
 - TEOS-Proposals
 
-### Bridge (3)
-- Pi-TEOS-Bridge
+### Bridge (2)
 - TEOS-Bridge-SDK
 - Bridge-Validator
 
@@ -105,13 +101,7 @@
 - TEOS-Bank-API
 - Payment-Gateway
 
-### Transportation (3)
-- PiTaxi
-- PiTaxi-Driver
-- PiTaxi-Rider
-
-### Infrastructure (4)
-- PiNode-Tools
+### Infrastructure (3)
 - TEOS-Explorer
 - TEOS-Analytics
 - Network-Monitor
@@ -142,9 +132,8 @@
 3. **Teos Governance** - DAO governance system
 4. **Bankchain** - Decentralized banking
 5. **Digital Passport** - Blockchain identity
-6. **PiTaxi** - Ride-sharing DApp
-7. **Teos Mining** - Mining operations
-8. **Teos Staking** - Token staking rewards
+6. **Teos Mining** - Mining operations
+7. **Teos Staking** - Token staking rewards
 
 ---
 
@@ -169,7 +158,7 @@
 ### Analytics
 - **Provider**: PostHog
 - **Env Variable**: `POSTHOG_KEY`
-- **Events**: chat_query, pi_login_attempt
+- **Events**: chat_query
 
 ### CI/CD
 - **Platform**: GitHub Actions

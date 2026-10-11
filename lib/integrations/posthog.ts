@@ -65,18 +65,8 @@ class PostHogClient {
   }
 
   /**
-   * Track a Pi login attempt
+   * Track a login attempt
    */
-  async trackPiLoginAttempt(userId: string, success: boolean): Promise<void> {
-    await this.capture({
-      distinctId: userId,
-      event: "pi_login_attempt",
-      properties: {
-        success,
-        timestamp: new Date().toISOString(),
-      },
-    })
-  }
 }
 
 // Export singleton instance
@@ -88,5 +78,4 @@ export const posthog = new PostHogClient()
  * import { posthog } from '@/lib/integrations/posthog'
  *
  * await posthog.trackChatQuery(userId, "What is TEOS?", false)
- * await posthog.trackPiLoginAttempt(userId, true)
  */

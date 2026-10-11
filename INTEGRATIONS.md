@@ -108,9 +108,6 @@ Track user events, analyze behavior, and monitor application usage.
    
    // Track chat query
    await posthog.trackChatQuery(userId, "What is TEOS?", false)
-   
-   // Track login attempt
-   await posthog.trackPiLoginAttempt(userId, true)
    ```
 
 ### Tracked Events
@@ -118,7 +115,6 @@ Track user events, analyze behavior, and monitor application usage.
 | Event | Properties | Description |
 |-------|------------|-------------|
 | `chat_query` | query_length, is_founder | User sends a chat message |
-| `pi_login_attempt` | success | User attempts Pi Network login |
 
 ### Features
 - Real-time event tracking

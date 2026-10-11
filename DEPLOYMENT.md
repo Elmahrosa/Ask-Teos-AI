@@ -3,7 +3,7 @@
 ## Live target: Vercel Hobby (free)
 
 `Ask-Teos-AI` runs as a **Next.js** frontend on **Vercel Hobby** (free tier).
-No paid hosting is used. Legacy hosts (Railway, Hostinger, Pi App Engine) are
+No paid hosting is used. Legacy hosts (Railway, Hostinger) are
 **lapsed and out of scope** — URLs on those services are dead and must not be
 used.
 
@@ -35,8 +35,7 @@ required at build time**; every variable below is runtime-only.
 | `TEOS_RPC`, `NEXT_PUBLIC_TEOS_RPC` | no | Solana RPC endpoint |
 | `NEXT_PUBLIC_BACKEND_URL` | no | live backend base URL — set once a backend is restored (placeholder `https://backend.invalid` otherwise) |
 | `TEOS_AGENT_URL`, `TEOS_AGENT_API_KEY` | agent only | private agent-service endpoint + service key (server-side) |
-| `TEOS_AGENT_AUTH_MODE`, `TEOS_AGENT_PI_JWKS_URL` | agent only | caller auth (`pi`/`none`) + Pi public-key endpoint |
-| `TEOS_AGENT_TIMEOUT_MS`, `TEOS_AGENT_RATE_LIMIT_PER_MIN`, `TEOS_AGENT_AUDIT_DIR` | no | per-run deadline / per-user limit / digest-only audit store |
+| `TEOS_AGENT_TIMEOUT_MS`, `TEOS_AGENT_RATE_LIMIT_PER_MIN`, `TEOS_AGENT_AUDIT_DIR` | no | per-run deadline / per-IP limit / digest-only audit store |
 
 ### Automatic deployment via GitHub
 
@@ -68,18 +67,18 @@ Required app-side environment (see `teos-ai-agent-integration/deployment.md`):
 | `TEOS_AGENT_URL` | yes | Private URL of the agent service (e.g. `http://teos-agent:8000`) |
 | `TEOS_AGENT_API_KEY` | yes | Service-to-service secret (server only; never exposed to the browser) |
 | `TEOS_AGENT_TIMEOUT_MS` | no | Client deadline, default `150000` |
-| `TEOS_AGENT_AUTH_MODE` | no | `pi` (default, server-side RS256 verification) or `none` (dev only) |
-| `TEOS_AGENT_PI_JWKS_URL` | no | Pi public-key endpoint; the route fails closed if unreachable |
-| `TEOS_AGENT_RATE_LIMIT_PER_MIN` | no | Per-user limit, default `12` |
+| `TEOS_AGENT_RATE_LIMIT_PER_MIN` | no | Per-IP limit, default `12` |
 | `TEOS_AGENT_AUDIT_DIR` | no | App-side audit (JSONL, digest-only), default `./data/audit` |
 
-The route is **POST-only**, verifies the Pi access token server-side, rate-limits
-per user, and writes a digest-only audit record; audit-write failure fails closed.
+The route is **POST-only**, rate-limits per source IP, and writes a digest-only
+audit record; audit-write failure fails closed. Caller authentication was
+removed with the (deleted) third-party auth dependency.
 
 ## Backend
 
 The legacy frontend backend referenced by `lib/system-config.ts`
-(`BACKEND_CONFIG.BASE_URL`) was hosted on **Pi App Engine** and is **dead** (the
+(`BACKEND_CONFIG.BASE_URL`) was hosted on a legacy App Engine host and is
+**dead** (the
 subscription lapsed). Restore a live backend before relying on features that use
 it, and replace the URL in `lib/system-config.ts` (currently a locked /
 auto-generated file) with the new backend URL. Replacing the backend host is
@@ -115,7 +114,6 @@ Pipeline includes:
 
 ## Post-Deployment Checklist
 
-- [ ] Test Pi Network authentication
 - [ ] Verify founder dashboard access
 - [ ] Check GitHub metrics API
 - [ ] Test chat functionality
@@ -132,9 +130,8 @@ Pipeline includes:
   caused by missing Vercel env vars
 
 ### API Errors
-- Backend URL in `lib/system-config.ts` is currently a **dead** Pi App Engine URL —
+- Backend URL in `lib/system-config.ts` is currently a **dead** backend URL —
   confirm a live backend is configured
-- Check Pi Network authentication
 - Verify API keys are set correctly
 
 ### GitHub Metrics Not Loading

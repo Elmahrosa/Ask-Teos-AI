@@ -3,11 +3,13 @@
 // POST-only (only POST is exported; Next returns 405 for other verbs).
 //
 // Security posture:
-//   - Server-side Pi access-token verification (RS256, fail-closed). If the
-//     public key set cannot be verified, the route refuses to execute (503).
+//   - Caller authentication was removed per owner directive (2026-10-11).
+//     Requests are rate limited per source IP and every execution attempt is
+//     audited server-side; audit failure fails closed (503) — a run is never
+//     served unrecorded.
 //   - Strict request schema (zod, no unknown fields). The caller cannot pass a
 //     user id, a persona other than "know", tools, or policy overrides.
-//   - Rate limited per authenticated user (fallback: source IP).
+//   - Rate limited per source IP (in-memory fixed window).
 //   - Every execution attempt is audited server-side; audit failure fails
 //     closed (503) — a run is never served unrecorded.
 //   - Audit stores digest + length of the message, never the raw text, and
@@ -21,7 +23,6 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 
 import { teosAgent, TeosAgentClientError, newRequestId } from "@/lib/teos-agent"
-import { verifyPiToken, PiAuthError, type PiPrincipal } from "@/lib/pi-auth"
 import {
   AuditWriteError,
   newCorrelationId,
@@ -55,23 +56,12 @@ const BodySchema = z
   })
   .strict()
 
-function authMode(): "pi" | "none" {
-  return (process.env.TEOS_AGENT_AUTH_MODE ?? "pi").toLowerCase() === "none" ? "none" : "pi"
-}
-
 function rateLimitPerMin(): number {
   const raw = Number(process.env.TEOS_AGENT_RATE_LIMIT_PER_MIN ?? 12)
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 12
 }
 
-function bearerToken(request: Request): string | null {
-  const header = request.headers.get("authorization") ?? ""
-  const match = /^Bearer\s+(.+)$/i.exec(header.trim())
-  return match ? match[1]!.trim() : null
-}
-
-function clientKey(request: Request, principal: PiPrincipal | null): string {
-  if (principal?.uid) return `u:${principal.uid}`
+function clientKey(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
   return `ip:${forwarded || "unknown"}`
 }
@@ -155,53 +145,15 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
   const body = parsed.data
 
-  // 2) Authenticate (fail closed).
-  let principal: PiPrincipal | null = null
-  if (authMode() === "pi") {
-    const token = bearerToken(request)
-    if (!token) {
-      await auditDenied(
-        buildAudit({
-          correlationId, eventId, requestId,
-          user: { kind: "unauthenticated", user_id: null, is_founder: false },
-          authz: "denied", outcome: "auth_failed",
-          durationMs: Date.now() - started, message: body.message,
-          error: { code: "unauthorized", message: "missing bearer token" },
-        })
-      )
-      return errorResponse(401, "unauthorized", "missing bearer token", correlationId)
-    }
-    try {
-      principal = await verifyPiToken(token)
-    } catch (err) {
-      const code = err instanceof PiAuthError ? err.code : "invalid_signature"
-      const unavailable = code === "jwks_unreachable" || code === "jwks_invalid"
-      await auditDenied(
-        buildAudit({
-          correlationId, eventId, requestId,
-          user: { kind: "unauthenticated", user_id: null, is_founder: false },
-          authz: "denied", outcome: "auth_failed",
-          durationMs: Date.now() - started, message: body.message,
-          error: { code: unavailable ? "auth_unavailable" : "unauthorized", message: "token verification failed" },
-        })
-      )
-      if (unavailable) {
-        // Cannot verify => refuse to execute (do not trust an unverifiable token).
-        return errorResponse(503, "auth_unavailable", "authentication temporarily unavailable", correlationId)
-      }
-      return errorResponse(401, "unauthorized", "invalid access token", correlationId)
-    }
-  }
-
   const user: AgentAuditEvent["user"] = {
-    kind: principal ? "pi" : "unauthenticated",
-    user_id: principal?.uid ?? null,
+    kind: "unauthenticated",
+    user_id: null,
     is_founder: false,
   }
 
-  // 3) Rate limit per principal (fallback IP).
+  // 2) Rate limit per source IP.
   const limit = rateLimitPerMin()
-  const rl = rateLimit(clientKey(request, principal), limit)
+  const rl = rateLimit(clientKey(request), limit)
   if (!rl.ok) {
     await auditDenied(
       buildAudit({
@@ -216,7 +168,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     })
   }
 
-  // 4) Execute the agent run.
+  // 3) Execute the agent run.
   try {
     const result = await teosAgent.runAgent({
       request_id: requestId,
@@ -225,7 +177,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       conversation_id: body.conversation_id,
       max_duration_s: body.max_duration_s,
       context: {
-        user_id: principal?.uid,
         is_founder: user.is_founder,
         locale: body.context?.locale,
       },

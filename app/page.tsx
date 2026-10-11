@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Send, User, Bot, Crown } from "lucide-react"
+import { Send, User, Bot } from "lucide-react"
 import { useChatbot } from "@/hooks/use-chatbot"
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom"
 import { APP_CONFIG, COLORS } from "@/lib/app-config"
@@ -16,9 +16,6 @@ export default function ChatBot() {
     messages,
     input,
     isLoading,
-    isAuthenticated,
-    authMessage,
-    isFounderUser,
     offlineMode,
     sendMessage,
     handleKeyPress,
@@ -31,19 +28,6 @@ export default function ChatBot() {
 
   const { bottomRef } = useScrollToBottom([messages])
 
-  if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-4">
-        <div className="text-xl font-semibold mb-4">{APP_CONFIG.NAME}</div>
-        <div className="text-lg mb-4">{authMessage}</div>
-        <div
-          className="animate-spin rounded-full h-8 w-8 border-b-2"
-          style={{ borderBottomColor: COLORS.PRIMARY }}
-        ></div>
-      </div>
-    )
-  }
-
   if (showWelcome && messages.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: COLORS.BACKGROUND }}>
@@ -52,12 +36,6 @@ export default function ChatBot() {
             <div className="flex items-center justify-center gap-3 mb-3">
               <Bot className="w-10 h-10" />
               <CardTitle className="text-3xl font-bold">{APP_CONFIG.NAME}</CardTitle>
-              {isFounderUser && (
-                <Badge variant="secondary" className="bg-yellow-500 text-white border-yellow-600">
-                  <Crown className="w-4 h-4 mr-1" />
-                  Founder
-                </Badge>
-              )}
             </div>
             <p className="text-lg opacity-95">{APP_CONFIG.DESCRIPTION}</p>
           </CardHeader>
@@ -66,9 +44,10 @@ export default function ChatBot() {
             <div className="text-center space-y-4">
               <h2 className="text-2xl font-bold text-gray-900">Unlock the Future of Decentralized Interaction</h2>
               <p className="text-gray-700 leading-relaxed">
-                Seamlessly integrate Pi Network&apos;s blockchain with intelligent AI-driven chat, giving you a secure,
-                private, and lightning-fast experience. With Pi AI, founders and pioneers can explore real-time
-                insights, manage your Pi assets, and connect with the Pi community effortlessly.
+                Seamlessly combine Egypt&apos;s sovereign TEOS blockchain with intelligent AI-driven chat, giving you a
+                secure, private, and lightning-fast experience. With ASK TEOS AI, you can explore real-time
+                insights across the TEOS ecosystem, the International Civic Blockchain Constitution, and Egypt&apos;s
+                digital sovereignty vision effortlessly.
               </p>
             </div>
 
@@ -92,7 +71,7 @@ export default function ChatBot() {
                   </svg>
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1">Secure & Private</h3>
-                <p className="text-sm text-gray-600">Protected on Pi Network blockchain</p>
+                <p className="text-sm text-gray-600">Protected on TEOS sovereign blockchain</p>
               </div>
 
               <div className="flex flex-col items-center text-center p-4 rounded-lg bg-gray-50">
@@ -139,9 +118,9 @@ export default function ChatBot() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-gray-800 leading-relaxed">
-                Built for simplicity, every message, query, or transaction is protected on the Pi Network, combining the
-                power of blockchain with smart AI assistance. Whether you&apos;re tracking your Pi balance, exploring dApps,
-                or experimenting with AI integrations, Pi AI makes it intuitive and reliable.
+                Built for simplicity, every message, query, or transaction is informed by the TEOS sovereign
+                blockchain ecosystem, combining the power of blockchain with smart AI assistance. Whether you&apos;re
+                exploring TEOS repositories, DApps, or civic infrastructure, TEOS AI makes it intuitive and reliable.
               </p>
             </div>
 
@@ -169,24 +148,8 @@ export default function ChatBot() {
                     Explore Ecosystem
                   </Button>
                 </Link>
-                {isFounderUser && (
-                  <Link href="/founder" className="flex-1">
-                    <Button variant="outline" className="w-full bg-transparent">
-                      <Crown className="w-4 h-4 mr-2" />
-                      Dashboard
-                    </Button>
-                  </Link>
-                )}
               </div>
             </div>
-
-            {isFounderUser && (
-              <div className="text-center">
-                <Badge variant="outline" className="text-sm py-2 px-4">
-                  Unlimited Messages Available
-                </Badge>
-              </div>
-            )}
 
             <p className="text-center text-sm text-gray-600 pt-4">
               Join the next generation of digital pioneers. Safe, decentralized, and ready for the future.
@@ -204,28 +167,8 @@ export default function ChatBot() {
           <CardTitle className="text-center">
             <div className="flex items-center justify-center gap-2">
               <div className="text-xl font-semibold">{APP_CONFIG.NAME}</div>
-              {isFounderUser && (
-                <Badge variant="secondary" className="bg-yellow-500 text-white border-yellow-600">
-                  <Crown className="w-3 h-3 mr-1" />
-                  Founder
-                </Badge>
-              )}
             </div>
             {APP_CONFIG.DESCRIPTION && <div className="text-sm opacity-90 mt-1">{APP_CONFIG.DESCRIPTION}</div>}
-            {isFounderUser && (
-              <div className="flex gap-2 mt-3">
-                <Link href="/founder" className="flex-1">
-                  <Button variant="secondary" size="sm" className="w-full text-xs bg-white/20 hover:bg-white/30">
-                    Dashboard
-                  </Button>
-                </Link>
-                <Link href="/teos" className="flex-1">
-                  <Button variant="secondary" size="sm" className="w-full text-xs bg-white/20 hover:bg-white/30">
-                    Ecosystem
-                  </Button>
-                </Link>
-              </div>
-            )}
           </CardTitle>
         </CardHeader>
 
@@ -261,13 +204,6 @@ export default function ChatBot() {
         </CardContent>
 
         <CardFooter className="p-4 border-t">
-          {isFounderUser && (
-            <div className="w-full mb-2">
-              <Badge variant="outline" className="w-full justify-center text-xs py-1">
-                Unlimited Messages Available
-              </Badge>
-            </div>
-          )}
           <div className="flex w-full flex-col mb-4 gap-2">
             <div className="flex items-center gap-4">
               <span className="text-xs font-medium">Restrict to TEOS / Elmahrosa sources:</span>

@@ -6,7 +6,6 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 // --- Test doubles (hoisted so vi.mock factories can use them) ---------------
 const h = vi.hoisted(() => ({
   runAgent: vi.fn(),
-  verifyPiToken: vi.fn(),
 }))
 
 vi.mock("next/server", () => {
@@ -44,43 +43,23 @@ vi.mock("@/lib/teos-agent", () => ({
   },
 }))
 
-vi.mock("@/lib/pi-auth", () => ({
-  verifyPiToken: h.verifyPiToken,
-  PiAuthError: class PiAuthError extends Error {
-    readonly code: string
-    constructor(code: string, message: string) {
-      super(message)
-      this.name = "PiAuthError"
-      this.code = code
-    }
-  },
-}))
-
 // --- Environment must be set before the route (and its audit writer) load --
 const auditDir = mkdtempSync(join(tmpdir(), "teos-route-audit-"))
 process.env.TEOS_AGENT_AUDIT_DIR = auditDir
-process.env.TEOS_AGENT_AUTH_MODE = "pi"
 process.env.TEOS_AGENT_RATE_LIMIT_PER_MIN = "12"
 
 type RouteModule = typeof import("@/app/api/teos/agent/route")
-type PiAuthModule = typeof import("@/lib/pi-auth")
 
 let POST: RouteModule["POST"]
-let PiAuthError: PiAuthModule["PiAuthError"]
 let TeosAgentClientError: typeof import("@/lib/teos-agent").TeosAgentClientError
 
 const auditFile = join(auditDir, "agent-audit.jsonl")
 
-function makeRequest(
-  body: unknown,
-  opts: { token?: string | null; method?: string; headers?: Record<string, string> } = {}
-): Request {
-  const token = opts.token === undefined ? "valid-token" : opts.token
+function makeRequest(body: unknown, opts: { method?: string; headers?: Record<string, string> } = {}): Request {
   return new Request("https://app.test/api/teos/agent", {
     method: opts.method ?? "POST",
     headers: {
       "content-type": "application/json",
-      ...(token ? { authorization: `Bearer ${token}` } : {}),
       ...(opts.headers ?? {}),
     },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -92,7 +71,6 @@ function lastAudit(): Record<string, unknown> {
   return JSON.parse(lines[lines.length - 1]!) as Record<string, unknown>
 }
 
-const okPrincipal = { uid: "uid-1", username: "u", verified: true, alg: "RS256" as const }
 const okRun = {
   request_id: "req_test_0001",
   status: "success" as const,
@@ -110,8 +88,6 @@ const okRun = {
 beforeAll(async () => {
   const routeModule = await import("@/app/api/teos/agent/route")
   POST = routeModule.POST
-  const piAuth = await import("@/lib/pi-auth")
-  PiAuthError = piAuth.PiAuthError
   const agent = await import("@/lib/teos-agent")
   TeosAgentClientError = agent.TeosAgentClientError
   const { resetRateLimiter } = await import("@/lib/rate-limit")
@@ -120,8 +96,6 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   h.runAgent.mockReset()
-  h.verifyPiToken.mockReset()
-  process.env.TEOS_AGENT_AUTH_MODE = "pi"
   process.env.TEOS_AGENT_RATE_LIMIT_PER_MIN = "12"
   process.env.TEOS_AGENT_AUDIT_DIR = auditDir
   const { resetRateLimiter } = await import("@/lib/rate-limit")
@@ -133,43 +107,18 @@ afterAll(() => {
 })
 
 describe("POST /api/teos/agent", () => {
-  it("rejects a missing bearer token with 401 and does not execute", async () => {
-    const res = await POST(makeRequest({ message: "hi" }, { token: null }))
-    expect(res.status).toBe(401)
-    expect(h.runAgent).not.toHaveBeenCalled()
-    expect(lastAudit().outcome).toBe("auth_failed")
-  })
-
-  it("rejects an invalid token with 401 (no upstream call)", async () => {
-    h.verifyPiToken.mockRejectedValue(new PiAuthError("invalid_signature", "bad"))
-    const res = await POST(makeRequest({ message: "hi" }))
-    expect(res.status).toBe(401)
-    expect(h.runAgent).not.toHaveBeenCalled()
-  })
-
-  it("fails closed with 503 when the token cannot be verified (keys unavailable)", async () => {
-    h.verifyPiToken.mockRejectedValue(new PiAuthError("jwks_unreachable", "network"))
-    const res = await POST(makeRequest({ message: "hi" }))
-    expect(res.status).toBe(503)
-    expect((await res.json()).error.code).toBe("auth_unavailable")
-    expect(h.runAgent).not.toHaveBeenCalled()
-  })
-
   it("rejects an unknown/extra request field (no mode override) with 400", async () => {
-    h.verifyPiToken.mockResolvedValue(okPrincipal)
     const res = await POST(makeRequest({ message: "hi", mode: "quality" }))
     expect(res.status).toBe(400)
     expect(h.runAgent).not.toHaveBeenCalled()
   })
 
   it("rejects an empty message with 400", async () => {
-    h.verifyPiToken.mockResolvedValue(okPrincipal)
     const res = await POST(makeRequest({ message: "" }))
     expect(res.status).toBe(400)
   })
 
   it("executes a valid request, returns a branded result, and audits digest-only", async () => {
-    h.verifyPiToken.mockResolvedValue(okPrincipal)
     h.runAgent.mockResolvedValue(okRun)
 
     const res = await POST(makeRequest({ message: "secret question", conversation_id: "c1" }))
@@ -181,11 +130,11 @@ describe("POST /api/teos/agent", () => {
     // Brand safety: no model-engine name ever appears in a client response.
     expect(JSON.stringify(payload)).not.toMatch(/big-?pickle|\bbp\b/i)
 
-    // The client call is forced to persona "know" and carries the server-side user id.
+    // The client call is forced to persona "know" and carries no caller identity.
     const args = h.runAgent.mock.calls[0]![0]
     expect(args.persona).toBe("know")
     expect(args.message).toBe("secret question")
-    expect(args.context.user_id).toBe("uid-1")
+    expect(args.context.user_id).toBeUndefined()
     expect(args.context.is_founder).toBe(false)
 
     const audit = lastAudit()
@@ -195,9 +144,8 @@ describe("POST /api/teos/agent", () => {
     expect((audit.tool_decisions as unknown[]).length).toBe(2)
   })
 
-  it("rate limits per user and returns 429 with Retry-After", async () => {
+  it("rate limits per source IP and returns 429 with Retry-After", async () => {
     process.env.TEOS_AGENT_RATE_LIMIT_PER_MIN = "2"
-    h.verifyPiToken.mockResolvedValue({ ...okPrincipal, uid: "uid-ratelimited" })
     h.runAgent.mockResolvedValue(okRun)
 
     const first = await POST(makeRequest({ message: "a" }))
@@ -211,7 +159,6 @@ describe("POST /api/teos/agent", () => {
   })
 
   it("maps an upstream timeout to 504", async () => {
-    h.verifyPiToken.mockResolvedValue(okPrincipal)
     h.runAgent.mockRejectedValue(new TeosAgentClientError(408, "timeout", "slow"))
     const res = await POST(makeRequest({ message: "hi" }))
     expect(res.status).toBe(504)
@@ -222,19 +169,10 @@ describe("POST /api/teos/agent", () => {
     const blocker = join(auditDir, "blocker-file")
     writeFileSync(blocker, "x")
     process.env.TEOS_AGENT_AUDIT_DIR = blocker
-    h.verifyPiToken.mockResolvedValue({ ...okPrincipal, uid: "uid-auditfail" })
     h.runAgent.mockResolvedValue(okRun)
 
     const res = await POST(makeRequest({ message: "hi" }))
     expect(res.status).toBe(503)
     expect((await res.json()).error.code).toBe("audit_unavailable")
-  })
-
-  it("allows an explicit auth opt-out for local development only", async () => {
-    process.env.TEOS_AGENT_AUTH_MODE = "none"
-    h.runAgent.mockResolvedValue(okRun)
-    const res = await POST(makeRequest({ message: "hi" }, { token: null }))
-    expect(res.status).toBe(200)
-    expect(h.verifyPiToken).not.toHaveBeenCalled()
   })
 })

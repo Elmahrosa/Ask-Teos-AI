@@ -45,7 +45,7 @@ export interface AgentAuditEvent {
   request_id: string
   ts: string
   service: "ask-teos-ai"
-  user: { kind: "pi" | "unauthenticated"; user_id: string | null; is_founder: boolean }
+  user: { kind: "unauthenticated"; user_id: string | null; is_founder: boolean }
   authz: "allowed" | "denied"
   persona: string
   model?: string
